@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="referrer" content="no-referrer">
 <title>Tailandia · Camboya · Vietnam — dic 2026</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
 @font-face{font-family:x;src:local("Georgia")}
 :root{--ink:#12211E;--jade:#1F4B43;--jade-soft:#3C6F63;--lacquer:#A63A28;--brass:#B8912E;
@@ -43,6 +44,31 @@ section{margin-bottom:60px;scroll-margin-top:60px}
 .flag{border-left:3px solid var(--lacquer);background:rgba(166,58,40,.05);padding:14px 18px;margin-bottom:12px}
 .flag .t{font-weight:700;font-size:13.5px;margin-bottom:3px;color:var(--lacquer)}
 .flag p{margin:0;font-size:14px}
+.flag.ok{border-left-color:var(--jade);background:rgba(31,75,67,.05)}
+.flag.ok .t{color:var(--jade)}
+
+#map{height:440px;border:1px solid var(--stone);background:var(--stone)}
+#map:empty::after{content:"El mapa necesita conexión y JavaScript";display:flex;height:100%;
+  align-items:center;justify-content:center;font-family:var(--mono);font-size:10px;
+  letter-spacing:.1em;text-transform:uppercase;color:#6b6857;text-align:center;padding:20px}
+.legend{display:flex;gap:18px;flex-wrap:wrap;align-items:center;padding:10px 2px 0;
+  font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--jade-soft)}
+.legend span{display:flex;align-items:center;gap:6px}
+.legend .note{color:var(--stone-deep);text-transform:none;letter-spacing:0;font-size:11px}
+.ln{width:22px;height:0;border-top:2px solid var(--jade)}
+.ln.air{border-top-style:dashed;border-top-color:var(--lacquer)}
+.mlist{list-style:none;padding:0;margin:18px 0 0;display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:1px;background:var(--stone);border:1px solid var(--stone)}
+.mlist a{display:block;background:var(--paper);padding:10px 13px;text-decoration:none;color:var(--ink)}
+.mlist b{display:block;font-size:13.5px;font-family:var(--serif)}
+.mlist span{font-family:var(--mono);font-size:9.5px;letter-spacing:.05em;color:var(--jade-soft)}
+.pin{background:var(--jade);color:#fff;border-radius:50%;width:26px;height:26px;
+  display:flex;align-items:center;justify-content:center;font-family:var(--mono);
+  font-size:12px;font-weight:600;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.4)}
+.leaflet-popup-content{font-family:var(--sans);font-size:13px;margin:11px 14px}
+.leaflet-popup-content b{font-family:var(--serif);font-size:14.5px}
+.leaflet-popup-content em{display:block;font-style:normal;font-family:var(--mono);
+  font-size:10px;letter-spacing:.06em;color:var(--jade-soft);margin-top:3px}
 
 .stop{margin-bottom:44px;scroll-margin-top:64px}
 .stop-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;
@@ -136,7 +162,7 @@ footer{padding-top:20px;border-top:1px solid var(--stone);font-size:12px;color:v
 </head>
 <body>
 
-<nav class="nav"><div class="nav-in"><a href="#avisos">Avisos</a><a href="#bangkok1">Bangkok</a><a href="#siemreap">Siem Reap</a><a href="#hanoi">Hanoi</a><a href="#ninhbinh">Ninh Bình</a><a href="#phongnha">Phong Nha</a><a href="#hue">Hue</a><a href="#hoian">Hoi An</a><a href="#bangkok2">Bangkok</a><a href="#dias">Día a día</a><a href="#fechas">Fechas</a><a href="#checklist">Checklist</a></div></nav>
+<nav class="nav"><div class="nav-in"><a href="#avisos">Avisos</a><a href="#mapa">Mapa</a><a href="#bangkok1">Bangkok</a><a href="#siemreap">Siem Reap</a><a href="#hanoi">Hanoi</a><a href="#ninhbinh">Ninh Bình</a><a href="#phongnha">Phong Nha</a><a href="#hue">Hue</a><a href="#hoian">Hoi An</a><a href="#bangkok2">Bangkok</a><a href="#dias">Día a día</a><a href="#fechas">Fechas</a><a href="#checklist">Checklist</a></div></nav>
 
 <div class="wrap">
 <header class="cover">
@@ -147,18 +173,36 @@ footer{padding-top:20px;border-top:1px solid var(--stone);font-size:12px;color:v
     <div class="fact"><span class="n">21</span><span class="l">Noches</span></div>
     <div class="fact"><span class="n">8</span><span class="l">Paradas</span></div>
     <div class="fact"><span class="n">3</span><span class="l">Países</span></div>
-    <div class="fact"><span class="n">69</span><span class="l">Fotos</span></div>
+    <div class="fact"><span class="n">68</span><span class="l">Fotos</span></div>
   </div>
 </header>
 
 <section id="avisos">
   <div class="sec-head"><h2>Antes de nada</h2></div>
-  <div class="flag"><div class="t">Dos hoteles reservados en Phong Nha, 17–19 dic</div>
-    <p>Phong Nha Mountain House (40 €) y Nguyen Shack Retreat (45 €) siguen activos para las mismas dos noches. Los dos con cancelación gratuita, así que aún no hay dinero en juego — pero hay que cancelar uno.</p></div>
   <div class="flag"><div class="t">Dos hoteles reservados en Hoi An, 22–23 dic</div>
-    <p>Sứ Retreat (79 €) y Grand Sunrise Palace (129 €) se solapan en la noche del cumpleaños. Los dos con cancelación gratuita.</p></div>
-  <div class="flag"><div class="t">Hue sin reservar — 3 noches abiertas</div>
-    <p>Meliá Vinpearl Hue, 19–22 de diciembre, presupuestado en 190 €. Es el único hueco real del viaje.</p></div>
+    <p>Sứ Retreat (79 €) y Grand Sunrise Palace (129 €) se solapan en la noche del cumpleaños. Los dos con cancelación gratuita. Es lo único que queda por decidir.</p></div>
+  <div class="flag ok"><div class="t">Resuelto: Phong Nha y Hue</div>
+    <p>Phong Nha queda con Mountain House. Hue ya está reservado — LOST, el ático del 19 al 22, 113,34 €. El viaje tiene las 21 noches cubiertas.</p></div>
+</section>
+
+<section id="mapa">
+  <div class="sec-head"><h2>El mapa</h2><span class="eyebrow">8 paradas · 3 países</span></div>
+  <div id="map"></div>
+  <div class="legend">
+    <span><i class="ln air"></i>Avión</span>
+    <span><i class="ln land"></i>Por tierra</span>
+    <span class="note">Posiciones aproximadas, a nivel de barrio</span>
+  </div>
+  <ol class="mlist">
+    <li><a href="#bangkok1"><b>1. Bangkok</b><span>5 – 8 dic · Grande Centre Point Surawong</span></a></li>
+    <li><a href="#siemreap"><b>2. Siem Reap</b><span>8 – 11 dic · The Embassy Angkor Resort &amp; Spa</span></a></li>
+    <li><a href="#hanoi"><b>3. Hanoi</b><span>11 – 14 dic · Vista 9 Skyline Suite</span></a></li>
+    <li><a href="#ninhbinh"><b>4. Ninh Bình</b><span>14 – 17 dic · Trang An Garden Resort</span></a></li>
+    <li><a href="#phongnha"><b>5. Phong Nha</b><span>17 – 19 dic · Phong Nha Mountain House</span></a></li>
+    <li><a href="#hue"><b>6. Hue</b><span>19 – 22 dic · LOST — Ático con terraza</span></a></li>
+    <li><a href="#hoian"><b>7. Hoi An</b><span>22 – 23 dic · Hoi An — 2 opciones</span></a></li>
+    <li><a href="#bangkok2"><b>8. Bangkok</b><span>23 – 26 dic · Chatrium Hotel Riverside</span></a></li>
+  </ol>
 </section>
 
 <section id="ruta">
@@ -250,7 +294,7 @@ footer{padding-top:20px;border-top:1px solid var(--stone);font-size:12px;color:v
 <div class="stop" id="phongnha">
     <div class="stop-head"><h3>Phong Nha</h3>
       <span class="when">17 – 19 dic · 2 noches</span></div>
-    <div class="opts two"><article class="card alt">
+    <div class="opts"><article class="card">
       <div class="carwrap">
         <div class="car" data-car="1">
           <figure class="slide"><img  referrerpolicy="no-referrer" src="https://cf.bstatic.com/xdata/images/hotel/max1024x768/175009579.jpg?k=91ad35aae0651b291f3dd5b7bdce075328e60122ca925202278f0004c9557a2d&o=" alt="Phong Nha Mountain House — Habitación"><figcaption class="badge">Habitación</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://cf.bstatic.com/xdata/images/hotel/max1024x768/175009495.jpg?k=f1ff21bd762e2abff61aa5c6068903392ece22e617c3ff6a532637fde85a6826&o=" alt="Phong Nha Mountain House — Habitación"><figcaption class="badge">Habitación</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://cf.bstatic.com/xdata/images/hotel/max1024x768/175009566.jpg?k=42c59209ae701e0a6ddb5e77b6019a2c393c87946950777bb5fda6d9b5607354&o=" alt="Phong Nha Mountain House — Habitación"><figcaption class="badge">Habitación</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://cf.bstatic.com/xdata/images/hotel/max1024x768/809948980.jpg?k=91241fd7b5b29e5cf151551dbb465f982d231bf937831264431f2c1daafc3db6&o=" alt="Phong Nha Mountain House — Alojamiento"><figcaption class="badge">Alojamiento</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://cf.bstatic.com/xdata/images/hotel/max1024x768/726122682.jpg?k=d692ee8bb4db86f9e15f77ccb00c652f76454262cf6ac76702c95152b039a221&o=" alt="Phong Nha Mountain House — Alojamiento"><figcaption class="badge">Alojamiento</figcaption></figure>
@@ -266,38 +310,28 @@ footer{padding-top:20px;border-top:1px solid var(--stone);font-size:12px;color:v
           <span class="tag due">Pagar después</span></div>
         <dl><dt>Cancelación</dt><dd>Gratuita</dd><dt>Habitación</dt><dd>1 cama doble grande. Balcón y patio, vistas al jardín y a la montaña.</dd></dl>
         <div class="amen"><span>Balcón</span><span>Vistas a la montaña</span><span>Patio</span><span>Terraza</span><span>Minibar</span><span>WiFi gratis</span></div>
-        <a class="go ghost" href="https://www.booking.com/hotel/vn/phong-nha-mountain-house.es.html" target="_blank" rel="noopener">Ver en Booking.com &rarr;</a>
-      </div></article>
-<article class="card alt">
-      <div class="carwrap">
-        <div class="car" data-car="1">
-          <figure class="slide"><img  referrerpolicy="no-referrer" src="https://cf.bstatic.com/xdata/images/hotel/max1024x768/717518352.jpg?k=fbe523e65cbeb5efc922303671dd01d5ab2a6c7011700dbd40a63e5cea70240e&o=" alt="Nguyen Shack Retreat — Habitación"><figcaption class="badge">Habitación</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://cf.bstatic.com/xdata/images/hotel/max1024x768/717518440.jpg?k=55bc6db6c0b4792623a7b496896c0ea48a925872c8379a357806e6f0f7b2a7bb&o=" alt="Nguyen Shack Retreat — Habitación"><figcaption class="badge">Habitación</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://cf.bstatic.com/xdata/images/hotel/max1024x768/717518241.jpg?k=08b29368c4b7178d1b3eb65cc0067fea4227ce92238fc292fdcee39d7c73d961&o=" alt="Nguyen Shack Retreat — Habitación"><figcaption class="badge">Habitación</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://cf.bstatic.com/xdata/images/hotel/max1024x768/599401377.jpg?k=8bacac0c5bda7df352022ec9e185b3fed1db2eba7d31360002e95c8678204a19&o=" alt="Nguyen Shack Retreat — Alojamiento"><figcaption class="badge">Alojamiento</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://cf.bstatic.com/xdata/images/hotel/max1024x768/865938518.jpg?k=03c8c38d2f80a8e2bf12b43499f7c06699999c97294aab08595fd736e649387c&o=" alt="Nguyen Shack Retreat — Alojamiento"><figcaption class="badge">Alojamiento</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://cf.bstatic.com/xdata/images/hotel/max1024x768/865938605.jpg?k=30cf1ffc343a17cb5fd015e0b05b36f6e691e9375a8a7a33f54a745a280256b7&o=" alt="Nguyen Shack Retreat — Alojamiento"><figcaption class="badge">Alojamiento</figcaption></figure>
-        </div>
-        <button class="arw p" data-dir="-1" aria-label="Anterior" hidden>&#8249;</button>
-        <button class="arw n" data-dir="1" aria-label="Siguiente" hidden>&#8250;</button>
-        <div class="count">1 / 6</div>
-      </div>
-      <div class="body">
-        <h4>Nguyen Shack Retreat</h4>
-        <div class="room">Habitación Doble Deluxe · 25 m²</div>
-        <div class="priceline"><span class="price">45 €</span><span class="per">2 noches</span>
-          <span class="tag due">Pagar después</span></div>
-        <dl><dt>Cancelación</dt><dd>Gratuita</dd><dt>Dónde</dt><dd>Cù Lạc 2, Sơn Trạch — justo a la entrada del parque nacional, a unos 2 km del pueblo turístico</dd><dt>Habitación</dt><dd>1 cama doble y 1 sofá cama. Vistas al jardín.</dd><dt>Extras</dt><dd>Bungalows junto al lago, piscina de 40 m en forma de barco, yoga a diario. Organizan recogida en el aeropuerto de Dong Hoi (unos 45 min).</dd></dl>
-        <div class="amen"><span>25 m²</span><span>Vistas al jardín</span><span>Baño privado</span><span>Minibar</span><span>WiFi gratis</span></div>
-        <a class="go ghost" href="https://www.booking.com/hotel/vn/nguyen-shack-tribal-life-in-the-forest-amp-more.es.html" target="_blank" rel="noopener">Ver en Booking.com &rarr;</a>
+        <a class="go" href="https://www.booking.com/hotel/vn/phong-nha-mountain-house.es.html" target="_blank" rel="noopener">Ver en Booking.com &rarr;</a>
       </div></article></div></div>
 <div class="stop" id="hue">
     <div class="stop-head"><h3>Hue</h3>
       <span class="when">19 – 22 dic · 3 noches</span></div>
-    <div class="opts"><article class="card alt"><div class="car empty"><span>Sin fotos todavía</span></div>
+    <div class="opts"><article class="card">
+      <div class="carwrap">
+        <div class="car" data-car="1">
+          <figure class="slide"><img  referrerpolicy="no-referrer" src="https://a0.muscache.com/im/pictures/hosting/Hosting-1611373161981075209/original/54586311-b6d9-4dd5-b492-cff287d94ddf.jpeg?im_w=1200" alt="LOST — Ático con terraza — Habitación"><figcaption class="badge">Habitación</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://a0.muscache.com/im/pictures/hosting/Hosting-1611373161981075209/original/6ed0fc66-80a5-4432-bd17-7af96320b54b.jpeg?im_w=1200" alt="LOST — Ático con terraza — Habitación"><figcaption class="badge">Habitación</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://a0.muscache.com/im/pictures/hosting/Hosting-1611373161981075209/original/8028f923-db09-44ed-84a7-c5183b56781c.jpeg?im_w=1200" alt="LOST — Ático con terraza — Habitación"><figcaption class="badge">Habitación</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://a0.muscache.com/im/pictures/hosting/Hosting-1611373161981075209/original/286d10a4-a7af-49b9-b071-bc2e5f1ea6b2.jpeg?im_w=1200" alt="LOST — Ático con terraza — Habitación"><figcaption class="badge">Habitación</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://a0.muscache.com/im/pictures/hosting/Hosting-1611373161981075209/original/c8db643d-e573-4602-a9a6-816df6648c1c.jpeg?im_w=1200" alt="LOST — Ático con terraza — Habitación"><figcaption class="badge">Habitación</figcaption></figure>
+        </div>
+        <button class="arw p" data-dir="-1" aria-label="Anterior" hidden>&#8249;</button>
+        <button class="arw n" data-dir="1" aria-label="Siguiente" hidden>&#8250;</button>
+        <div class="count">1 / 5</div>
+      </div>
       <div class="body">
-        <h4>Meliá Vinpearl Hue</h4>
-        <div class="room">Tipo de habitación aún sin elegir</div>
-        <div class="priceline"><span class="price">190 €</span><span class="per">3 noches · presupuesto</span>
-          <span class="tag due">Por reservar</span></div>
-        <dl><dt>Estado</dt><dd>Tres noches abiertas. Diciembre es temporada alta en la costa central — conviene cerrarlo pronto.</dd></dl>
-        
-        <a class="go ghost" href="https://www.booking.com/hotel/vn/melia-vinpearl-hue-hotel.es.html" target="_blank" rel="noopener">Reservar en Booking.com &rarr;</a>
+        <h4>LOST — Ático con terraza</h4>
+        <div class="room">Habitación privada en ático · Airbnb · anfitrión LimdimHere</div>
+        <div class="priceline"><span class="price">113,34 €</span><span class="per">3 noches</span>
+          <span class="tag paid">Reservado</span></div>
+        <dl><dt>Dónde</dt><dd>Centro de Hue. La dirección exacta te la dan después de reservar.</dd><dt>Alojamiento</dt><dd>1 dormitorio, 1 cama, baño privado. Máximo 2 huéspedes.</dd><dt>Horarios</dt><dd>Entrada desde las 14:00 · check-in autónomo con cerradura electrónica</dd><dt>Cómo se llega</dt><dd>Ascensor privado hasta la última planta. Se pasa por la cafetería y el bar de vinos del edificio.</dd><dt>Cómo es</dt><dd>Ventanal circular tipo caleidoscopio con vistas a la ciudad, techos altos de madera, baldosa hidráulica y bañera junto al cristal. Balcón privado con plantas.</dd><dt>Valoración</dt><dd>4,79 sobre 5 · 28 opiniones · anfitrión Superhost desde hace 7 años</dd><dt>Cancelación</dt><dd>Gratuita hasta el 14 de dic, 14:00. Si cancelas después, hasta el check-in del 19 de dic a las 14:00, el reembolso es parcial.</dd></dl>
+        <div class="amen"><span>Baño privado</span><span>Balcón</span><span>Bañera</span><span>Vistas a la ciudad</span><span>Lavadora</span><span>Escritorio</span><span>TV</span><span>WiFi</span></div>
+        <a class="go" href="https://www.airbnb.de/rooms/1611373161981075209" target="_blank" rel="noopener">Ver en Airbnb &rarr;</a>
       </div></article></div></div>
 <div class="stop" id="hoian">
     <div class="stop-head"><h3>Hoi An <span class="eyebrow">Cumpleaños</span></h3>
@@ -393,9 +427,8 @@ footer{padding-top:20px;border-top:1px solid var(--stone);font-size:12px;color:v
     <tr><th>Cuándo</th><th>Qué</th><th>Por qué</th></tr>
     <tr><td class="num">30 nov, 15:00</td><td>Trang An Garden Resort</td><td>Último momento para reembolso completo</td></tr>
     <tr><td class="num">6 dic, 15:00</td><td>Vista 9 Skyline Suite, Hanoi</td><td>Último momento para reembolso completo</td></tr>
-    <tr><td class="num">Antes de salir</td><td>Cancelar una reserva de Phong Nha</td><td>Dos habitaciones para las mismas noches</td></tr>
+    <tr><td class="num">14 dic, 14:00</td><td>LOST, Hue</td><td>Último momento para reembolso completo; después, parcial</td></tr>
     <tr><td class="num">Antes de salir</td><td>Cancelar una reserva de Hoi An</td><td>Dos habitaciones para la misma noche</td></tr>
-    <tr><td class="num">Cuanto antes</td><td>Reservar Hue</td><td>3 noches abiertas en temporada alta</td></tr>
   </table>
 </section>
 
@@ -421,8 +454,28 @@ footer{padding-top:20px;border-top:1px solid var(--stone);font-size:12px;color:v
 <footer>Hecho a partir de tu hoja de reservas. Confirma las fechas límite con tus propias confirmaciones antes de fiarte de ellas.</footer>
 </div>
 
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 document.documentElement.classList.add("js");
+
+const PARADAS=[{"n":1,"id":"bangkok1","city":"Bangkok","lat":13.728,"lng":100.529,"d":"5 – 8 dic","h":"Grande Centre Point Surawong"},{"n":2,"id":"siemreap","city":"Siem Reap","lat":13.345,"lng":103.87,"d":"8 – 11 dic","h":"The Embassy Angkor Resort & Spa","leg":"air"},{"n":3,"id":"hanoi","city":"Hanoi","lat":21.035,"lng":105.845,"d":"11 – 14 dic","h":"Vista 9 Skyline Suite","leg":"air"},{"n":4,"id":"ninhbinh","city":"Ninh Bình","lat":20.25,"lng":105.916,"d":"14 – 17 dic","h":"Trang An Garden Resort","leg":"land"},{"n":5,"id":"phongnha","city":"Phong Nha","lat":17.58,"lng":106.26,"d":"17 – 19 dic","h":"Phong Nha Mountain House","leg":"land"},{"n":6,"id":"hue","city":"Hue","lat":16.4637,"lng":107.5909,"d":"19 – 22 dic","h":"LOST — Ático con terraza","leg":"land"},{"n":7,"id":"hoian","city":"Hoi An","lat":15.8801,"lng":108.338,"d":"22 – 23 dic","h":"Hoi An — 2 opciones","leg":"land"},{"n":8,"id":"bangkok2","city":"Bangkok","lat":13.701,"lng":100.51,"d":"23 – 26 dic","h":"Chatrium Hotel Riverside","leg":"air"}];
+if(window.L){
+  const map=L.map("map",{scrollWheelZoom:false}).setView([17.5,105],5);
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    {maxZoom:18,attribution:'&copy; OpenStreetMap'}).addTo(map);
+  PARADAS.forEach((p,i)=>{
+    L.marker([p.lat,p.lng],{icon:L.divIcon({className:"",html:'<div class="pin">'+p.n+'</div>',
+      iconSize:[26,26],iconAnchor:[13,13]})}).addTo(map)
+      .bindPopup("<b>"+p.city+"</b><em>"+p.d+"</em><em>"+p.h+"</em>");
+    if(i>0){
+      const a=PARADAS[i-1];
+      L.polyline([[a.lat,a.lng],[p.lat,p.lng]],{
+        color:p.leg==="air"?"#A63A28":"#1F4B43",weight:2.5,opacity:.8,
+        dashArray:p.leg==="air"?"7,7":null}).addTo(map);
+    }
+  });
+  map.fitBounds(L.latLngBounds(PARADAS.map(p=>[p.lat,p.lng])),{padding:[45,45]});
+}
 document.querySelectorAll(".carwrap").forEach(w=>{
   const car=w.querySelector(".car"),cnt=w.querySelector(".count");
   const n=car.querySelectorAll(".slide").length;
