@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>Tailandia · Camboya · Vietnam — dic 2026</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style>
+:root{--ink:#12211E;--jade:#1F4B43;--jade-soft:#3C6F63;--lacquer:#A63A28;--brass:#B8912E;
+  --paper:#F7F5EF;--stone:#DCD8CA;--stone-deep:#B9B3A0;
+  --serif:Georgia,"Times New Roman",serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,Menlo,Consolas,monospace}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.6}
+h1,h2,h3,h4{font-family:var(--serif);font-weight:600;margin:0;line-height:1.15}
+.eyebrow{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--jade-soft)}
+a{color:var(--jade)}
+
+.nav{position:sticky;top:0;z-index:60;background:rgba(247,245,239,.95);border-bottom:1px solid var(--stone)}
+.nav-in{max-width:940px;margin:0 auto;padding:0 20px;display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+.nav-in::-webkit-scrollbar{display:none}
+.nav a{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;
+  padding:13px 11px;white-space:nowrap;color:var(--jade-soft);text-decoration:none;border-bottom:2px solid transparent}
+.nav a.on{color:var(--ink);border-bottom-color:var(--jade)}
+
+.wrap{max-width:940px;margin:0 auto;padding:0 20px 90px}
+.cover{padding:52px 0 34px;border-bottom:1px solid var(--stone);margin-bottom:44px}
+.cover h1{font-size:clamp(34px,7.5vw,60px);font-weight:400;letter-spacing:-.02em;margin:14px 0 8px}
+.cover h1 em{font-style:italic;color:var(--jade)}
+.cover .dates{font-size:17px;color:var(--jade);margin-bottom:28px}
+.facts{display:flex;flex-wrap:wrap;border-top:1px solid var(--stone)}
+.fact{flex:1 1 84px;padding:14px 16px 12px 0;border-right:1px solid var(--stone)}
+.fact:last-child{border-right:0}
+.fact .n{font-family:var(--serif);font-size:26px;font-weight:600;display:block;line-height:1}
+.fact .l{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--jade-soft);margin-top:5px;display:block}
+
+section{margin-bottom:60px;scroll-margin-top:60px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:24px;border-bottom:1px solid var(--stone);padding-bottom:9px}
+.sec-head h2{font-size:25px}
+.flag{border-left:3px solid var(--lacquer);background:rgba(166,58,40,.05);padding:14px 18px;margin-bottom:12px}
+.flag .t{font-weight:700;font-size:13.5px;margin-bottom:3px;color:var(--lacquer)}
+.flag p{margin:0;font-size:14px}
+.flag.ok{border-left-color:var(--jade);background:rgba(31,75,67,.05)}
+.flag.ok .t{color:var(--jade)}
+.flag.warn{border-left-color:var(--brass);background:rgba(184,145,46,.07)}
+.flag.warn .t{color:#8a6c18}
+
+#map{height:440px;border:1px solid var(--stone);background:var(--stone)}
+#map:empty::after{content:"El mapa necesita conexión y JavaScript";display:flex;height:100%;
+  align-items:center;justify-content:center;font-family:var(--mono);font-size:10px;
+  letter-spacing:.1em;text-transform:uppercase;color:#6b6857;text-align:center;padding:20px}
+.legend{display:flex;gap:18px;flex-wrap:wrap;align-items:center;padding:10px 2px 0;
+  font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--jade-soft)}
+.legend span{display:flex;align-items:center;gap:6px}
+.legend .note{color:var(--stone-deep);text-transform:none;letter-spacing:0;font-size:11px}
+.ln{width:22px;height:0;border-top:2px solid var(--jade)}
+.ln.air{border-top-style:dashed;border-top-color:var(--lacquer)}
+.mlist{list-style:none;padding:0;margin:18px 0 0;display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:1px;background:var(--stone);border:1px solid var(--stone)}
+.mlist a{display:block;background:var(--paper);padding:10px 13px;text-decoration:none;color:var(--ink)}
+.mlist b{display:block;font-size:13.5px;font-family:var(--serif)}
+.mlist span{font-family:var(--mono);font-size:9.5px;letter-spacing:.05em;color:var(--jade-soft)}
+.pin{background:var(--jade);color:#fff;border-radius:50%;width:26px;height:26px;
+  display:flex;align-items:center;justify-content:center;font-family:var(--mono);
+  font-size:12px;font-weight:600;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.4)}
+.leaflet-popup-content{font-family:var(--sans);font-size:13px;margin:11px 14px}
+.leaflet-popup-content b{font-family:var(--serif);font-size:14.5px}
+.leaflet-popup-content em{display:block;font-style:normal;font-family:var(--mono);
+  font-size:10px;letter-spacing:.06em;color:var(--jade-soft);margin-top:3px}
+.maplbl{background:rgba(247,245,239,.94);border:1px solid var(--stone-deep);box-shadow:none;
+  font-family:var(--sans);font-size:11.5px;font-weight:700;color:var(--ink);
+  padding:2px 7px;border-radius:2px;white-space:nowrap}
+.maplbl::before{display:none}
+.mapfail{display:flex;height:100%;align-items:center;justify-content:center;text-align:center;
+  padding:20px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:#6b6857;line-height:1.9}
+
+.stop{margin-bottom:44px;scroll-margin-top:64px}
+.stop-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;
+  padding-bottom:9px;border-bottom:1px solid var(--stone);margin-bottom:16px}
+.stop-head h3{font-size:23px}
+.stop-head .when{font-family:var(--mono);font-size:11.5px;color:var(--jade-soft)}
+.card{border:1px solid var(--stone);background:#fff;overflow:hidden;display:flex;flex-direction:column}
+.carwrap{position:relative;background:#0e1a18}
+.car{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;
+  scrollbar-width:none;aspect-ratio:3/2}
+.car::-webkit-scrollbar{display:none}
+.slide{flex:0 0 100%;margin:0;scroll-snap-align:center;position:relative;height:100%}
+.slide img{width:100%;height:100%;object-fit:cover;display:block}
+.badge{position:absolute;left:10px;top:10px;font-family:var(--mono);font-size:9px;letter-spacing:.11em;
+  text-transform:uppercase;padding:3px 8px;background:rgba(18,33,30,.78);color:#fff}
+.count{position:absolute;right:10px;top:10px;font-family:var(--mono);font-size:10px;padding:3px 8px;
+  background:rgba(18,33,30,.78);color:#fff;z-index:2}
+.arw{position:absolute;top:50%;transform:translateY(-50%);width:36px;height:36px;border:0;
+  background:rgba(255,255,255,.92);cursor:pointer;font-size:17px;color:var(--ink);
+  align-items:center;justify-content:center;z-index:2;display:none}
+.js .arw{display:flex}
+.arw[hidden],.js .arw[hidden]{display:none}
+.arw.p{left:8px}.arw.n{right:8px}
+.car.empty{align-items:center;justify-content:center;background:var(--stone);aspect-ratio:3/2;overflow:hidden}
+.car.empty span{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#6b6857}
+
+.body{padding:17px 19px 19px;flex:1;display:flex;flex-direction:column}
+.card h4{font-size:17px;margin-bottom:3px}
+.room{font-size:13.5px;color:var(--jade);font-style:italic;margin-bottom:13px}
+.priceline{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin-bottom:13px}
+.price{font-family:var(--serif);font-size:22px;font-weight:600}
+.per{font-size:12.5px;color:var(--jade-soft)}
+.tag{display:inline-block;font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:3px 7px}
+.tag.paid{background:var(--jade);color:#fff}
+.tag.due{background:var(--stone)}
+.tag.cash{background:var(--brass);color:#fff}
+.tag.nonref{background:var(--lacquer);color:#fff}
+dl{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:0 0 14px;font-size:13px}
+dt{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--stone-deep);padding-top:3px}
+dd{margin:0}
+.amen{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:15px}
+.amen span{font-family:var(--mono);font-size:9.5px;border:1px solid var(--stone);padding:3px 7px;color:var(--jade-soft)}
+.go{margin-top:auto;display:inline-flex;align-items:center;gap:7px;align-self:flex-start;
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+  background:var(--jade);color:#fff;text-decoration:none;padding:11px 15px}
+
+.day{display:grid;grid-template-columns:60px 1fr;gap:16px;padding:12px 0;border-bottom:1px solid var(--stone)}
+.day:last-child{border-bottom:0}
+.day .d{font-family:var(--mono);font-size:11px;color:var(--jade-soft);padding-top:2px}
+.day .place{font-weight:700;font-size:13px}
+.day .plan{font-size:14px;color:#33403C}
+.day.special .place{color:var(--lacquer)}
+
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin-bottom:6px}
+th{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--stone-deep);
+  text-align:left;font-weight:500;padding:0 10px 7px 0;border-bottom:1px solid var(--stone)}
+td{padding:10px 10px 10px 0;border-bottom:1px solid var(--stone);vertical-align:top}
+td.num{font-family:var(--mono);white-space:nowrap}
+tr.tot td{border-bottom:0;border-top:2px solid var(--ink);font-weight:700;padding-top:11px}
+.subhead{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--jade-soft);margin:30px 0 11px}
+.note{font-size:13px;color:#33403C;margin:10px 0 0}
+
+.llist{list-style:none;padding:0;margin:0}
+.llist li{padding:11px 0;border-bottom:1px solid var(--stone);display:flex;
+  justify-content:space-between;gap:14px;flex-wrap:wrap;align-items:baseline}
+.llist a{font-weight:700;font-size:14px;text-decoration:none;border-bottom:1px solid var(--stone-deep)}
+.llist span{font-family:var(--mono);font-size:10px;letter-spacing:.05em;color:var(--jade-soft)}
+
+.tips{display:grid;gap:1px;background:var(--stone);border:1px solid var(--stone)}
+.tip{background:#fff;padding:15px 18px}
+.tip h4{font-size:15px;margin-bottom:5px}
+.tip p{margin:0;font-size:13.5px;color:#33403C}
+
+.cgroup{margin-bottom:26px}
+.cgroup h4{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--jade-soft);margin-bottom:8px;font-weight:500}
+.checks{list-style:none;padding:0;margin:0;columns:2;column-gap:34px}
+.checks li{break-inside:avoid}
+.checks label{display:flex;gap:10px;align-items:flex-start;padding:6px 0;font-size:14px}
+.checks input{width:15px;height:15px;margin:4px 0 0;flex:none;accent-color:var(--jade)}
+footer{padding-top:20px;border-top:1px solid var(--stone);font-size:12px;color:var(--stone-deep)}
+
+@media (max-width:720px){
+  .checks{columns:1}
+  .day{grid-template-columns:1fr;gap:3px}
+  .wrap{padding:0 16px 70px}
+}
+@media print{
+  .nav,.arw{display:none}
+  body{background:#fff}
+  .car{overflow:visible;display:grid;grid-template-columns:repeat(3,1fr);gap:2px;aspect-ratio:auto}
+  .slide{flex:none}
+  .slide img{aspect-ratio:4/3}
+  .card,.stop,.day{page-break-inside:avoid}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav"><div class="nav-in"><a href="#avisos">Avisos</a><a href="#mapa">Mapa</a><a href="#bangkok1">Bangkok</a><a href="#siemreap">Siem Reap</a><a href="#hanoi">Hanoi</a><a href="#ninhbinh">Ninh Bình</a><a href="#phongnha">Phong Nha</a><a href="#hue">Hue</a><a href="#hoian">Hoi An</a><a href="#bangkok2">Bangkok</a><a href="#dias">Día a día</a><a href="#tramites">Trámites</a><a href="#pagos">Pagos</a><a href="#practico">Práctico</a><a href="#checklist">Checklist</a></div></nav>
+
+<div class="wrap">
+<header class="cover">
+  <div class="eyebrow">Guía de viaje · 2 viajeros</div>
+  <h1>Tailandia, Camboya<br>y <em>Vietnam</em></h1>
+  <div class="dates">Sábado 5 – sábado 26 de diciembre de 2026</div>
+  <div class="facts">
+    <div class="fact"><span class="n">21</span><span class="l">Noches</span></div>
+    <div class="fact"><span class="n">8</span><span class="l">Paradas</span></div>
+    <div class="fact"><span class="n">3</span><span class="l">Países</span></div>
+    <div class="fact"><span class="n">62</span><span class="l">Fotos</span></div>
+  </div>
+</header>
+
+<section id="avisos">
+  <div class="sec-head"><h2>Antes de nada</h2></div>
+  <div class="flag ok"><div class="t">Las 21 noches están reservadas</div>
+    <p>Ya no quedan decisiones de alojamiento pendientes. Phong Nha con Mountain House, Hue con LOST y Hoi An con Grand Sunrise Palace. Lo que queda son pagos y trámites.</p></div>
+  <div class="flag"><div class="t">836,87 € pendientes en cinco pagos, entre el 28 de nov y el 16 de dic</div>
+    <p>Más 1.200.000 VND (≈41 €) en efectivo para Phong Nha. El detalle está en la sección de pagos.</p></div>
+  <div class="flag warn"><div class="t">La e-Visa de Camboya hay que pedirla en noviembre</div>
+    <p>30 USD por persona, solo en evisa.gov.kh. Es el único trámite de pago y el que más tarda.</p></div>
+  <div class="flag warn"><div class="t">Tailandia necesita DOS TDAC distintas</div>
+    <p>Una para la entrada del 5 de diciembre y otra para la del 23. La primera no vale para la segunda entrada.</p></div>
+</section>
+
+<section id="mapa">
+  <div class="sec-head"><h2>El mapa</h2><span class="eyebrow">8 paradas · 3 países</span></div>
+  <div id="map"></div>
+  <div class="legend">
+    <span><i class="ln air"></i>Avión</span>
+    <span><i class="ln land"></i>Por tierra</span>
+    <span class="note">Posiciones aproximadas, a nivel de barrio · pulsa un pin para ver fechas y alojamiento</span>
+  </div>
+  <ol class="mlist">
+    <li><a href="#bangkok1"><b>1. Bangkok</b><span>5 – 8 dic · Grande Centre Point Surawong</span></a></li>
+    <li><a href="#siemreap"><b>2. Siem Reap</b><span>8 – 11 dic · The Embassy Angkor Resort &amp; Spa</span></a></li>
+    <li><a href="#hanoi"><b>3. Hanoi</b><span>11 – 14 dic · Vista 9 Skyline Suite</span></a></li>
+    <li><a href="#ninhbinh"><b>4. Ninh Bình</b><span>14 – 17 dic · Trang An Garden Resort</span></a></li>
+    <li><a href="#phongnha"><b>5. Phong Nha</b><span>17 – 19 dic · Phong Nha Mountain House</span></a></li>
+    <li><a href="#hue"><b>6. Hue</b><span>19 – 21 dic · LOST — Ático con terraza</span></a></li>
+    <li><a href="#hoian"><b>7. Hoi An</b><span>21 – 23 dic · Grand Sunrise Palace</span></a></li>
+    <li><a href="#bangkok2"><b>8. Bangkok</b><span>23 – 26 dic · Chatrium Hotel Riverside</span></a></li>
+  </ol>
+</section>
+
+<section id="ruta">
+  <div class="sec-head"><h2>La ruta</h2><span class="eyebrow">Bangkok → Bangkok</span></div>
+<div class="stop" id="bangkok1">
+    <div class="stop-head"><h3>Bangkok</h3>
+      <span class="when">5 – 8 dic · 3 noches</span></div>
+    <div class="opts"><article class="card">
+      <div class="carwrap">
+        <div class="car">
+          <figure class="slide"><img  referrerpolicy="no-referrer" src="https://cf.bstatic.com/xdata/images/hotel/max1024x768/491804713.jpg?k=e73bb2d2ff8a43615f882de0a66f8407d03d880230fc5e16b0014b558d634cc4&o=" alt="Grande Centre Point Surawong — Habitación"><figcaption class="badge">Habitación</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://cf.bstatic.com/xdata/images/hotel/max1024x768/491805016.jpg?k=82880f156f1e42ee048da1801e294a2cdda4742c4edb1cf4b065af1b0383f8ce&o=" alt="Grande Centre Point Surawong — Habitación"><figcaption class="badge">Habitación</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://cf.bstatic.com/xdata/images/hotel/max1024x768/491806444.jpg?k=f6d1d0fbf7064d8ceb3c45bb3b3a185f5a476a6ab47f8c024dec878e31996694&o=" alt="Grande Centre Point Surawong — Habitación"><figcaption class="badge">Habitación</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://cf.bstatic.com/xdata/images/hotel/max1024x768/491812208.jpg?k=bedb9a1946af7f328c619a0a4f1033dbb044788920ee659ae267005796b10ef8&o=" alt="Grande Centre Point Surawong — Habitación"><figcaption class="badge">Habitación</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://cf.bstatic.com/xdata/images/hotel/max1024x768/491804664.jpg?k=67372c875b9f62c378f23c803a5a300b1d9f8b198c270df992330588bfdae941&o=" alt="Grande Centre Point Surawong — Alojamiento"><figcaption class="badge">Alojamiento</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://cf.bstatic.com/xdata/images/hotel/max1024x768/491816366.jpg?k=457566a07a7186f5cc113442b147dc0dfeb64319efd988d3167e00b1f471eb79&o=" alt="Grande Centre Point Surawong — Alojamiento"><figcaption class="badge">Alojamiento</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://cf.bstatic.com/xdata/images/hotel/max1024x768/491815610.jpg?k=a7ef0188803c95873520147f5a8296eb937f3f1399cad970a847320cd27fc090&o=" alt="Grande Centre Point Surawong — Alojamiento"><figcaption class="badge">Alojamiento</figcaption></figure>
+        </div>
+        <button class="arw p" data-dir="-1" aria-label="Anterior" hidden>&#8249;</button>
+        <button class="arw n" data-dir="1" aria-label="Siguiente" hidden>&#8250;</button>
+        <div class="count">1 / 7</div>
+      </div>
+      <div class="body">
+        <h4>Grande Centre Point Surawong</h4>
+        <div class="room">Habitación Premium con cama extragrande · planta superior · 44 m²</div>
+        <div class="priceline"><span class="price">351 €</span><span class="per">3 noches</span>
+          <span class="tag paid">Pagado</span><span class="tag nonref">No reembolsable</span></div>
+        <dl><dt>Dónde</dt><dd>299 Thanon Surawong, Bang Rak — Silom / centro financiero, a pie del paseo del río Chao Phraya</dd><dt>Habitación</dt><dd>1 cama doble extragrande. Baño con albornoces, ducha a ras de suelo, bañera y bidet. Zona de estar y vistas a la ciudad.</dd><dt>Extras</dt><dd>Piscina en altura sobre la ciudad, spa, sauna. Metro Hua Lamphong a pocas manzanas.</dd><dt>Recordatorio</dt><dd>Comprobar si el vuelo siguiente sale de BKK o DMK. Guardad baht para la vuelta del 23 al 26.</dd></dl>
+        <div class="amen"><span>44 m²</span><span>Vistas a la ciudad</span><span>Bañera</span><span>Insonorización</span><span>Minibar</span><span>WiFi gratis</span></div>
+        <a class="go" href="https://www.booking.com/hotel/th/grande-centre-point-surawong-bangkok.es.html" target="_blank" rel="noopener">Ver en Booking.com &rarr;</a>
+      </div></article></div></div>
+<div class="stop" id="siemreap">
+    <div class="stop-head"><h3>Siem Reap</h3>
+      <span class="when">8 – 11 dic · 3 noches</span></div>
+    <div class="opts"><article class="card">
+      <div class="carwrap">
+        <div class="car">
+          <figure class="slide"><img  referrerpolicy="no-referrer" src="https://cf.bstatic.com/xdata/images/hotel/max1024x768/681567608.jpg?k=51406f3132c33d488e352e012aa033d53a4e8328b1773b53dd9c1133b69878a6&o=" alt="The Embassy Angkor Resort &amp; Spa — Habitación"><figcaption class="badge">Habitación</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://cf.bstatic.com/xdata/images/hotel/max1024x768/681567616.jpg?k=2a87fb9d43af6187f169c3cecf650b52601a21e6722c5a5e40a303b8c4a20a85&o=" alt="The Embassy Angkor Resort &amp; Spa — Habitación"><figcaption class="badge">Habitación</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://cf.bstatic.com/xdata/images/hotel/max1024x768/681567621.jpg?k=565b7a1e6af28d5f210f39eecabba28be2c84832736a53fcce8c07d126b3de78&o=" alt="The Embassy Angkor Resort &amp; Spa — Habitación"><figcaption class="badge">Habitación</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://cf.bstatic.com/xdata/images/hotel/max1024x768/681567628.jpg?k=b8a194837b37a7ce22cd09bb706984f0add93aaf57c77bf0465e912654921a61&o=" alt="The Embassy Angkor Resort &amp; Spa — Habitación"><figcaption class="badge">Habitación</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://cf.bstatic.com/xdata/images/hotel/max1024x768/681567644.jpg?k=a168c07552b11e518a0a55a17a91e1a1cbb3d73ac55a626993318dc8d6a2d05f&o=" alt="The Embassy Angkor Resort &amp; Spa — Habitación"><figcaption class="badge">Habitación</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://cf.bstatic.com/xdata/images/hotel/max1024x768/681568967.jpg?k=dbbcea60f6cc6e4fc7189935b97fe84dbb977c18088b35db2cd9655e991d1ba9&o=" alt="The Embassy Angkor Resort &amp; Spa — Habitación"><figcaption class="badge">Habitación</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://cf.bstatic.com/xdata/images/hotel/max1024x768/681568985.jpg?k=5cdca44fce49d853665528317a18d802fdb3cd86f9bba2e903d83db7f4126ce9&o=" alt="The Embassy Angkor Resort &amp; Spa — Habitación"><figcaption class="badge">Habitación</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://cf.bstatic.com/xdata/images/hotel/max1024x768/681582346.jpg?k=9c4649340bfae91abba3677f66b2cf9345708875cefa35ba6e86fe5e36b8cda7&o=" alt="The Embassy Angkor Resort &amp; Spa — Alojamiento"><figcaption class="badge">Alojamiento</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://cf.bstatic.com/xdata/images/hotel/max1024x768/681584514.jpg?k=52599114179de9cac186f3f18eca212f02a96e9041266653f144322fc740688d&o=" alt="The Embassy Angkor Resort &amp; Spa — Alojamiento"><figcaption class="badge">Alojamiento</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://cf.bstatic.com/xdata/images/hotel/max1024x768/681582310.jpg?k=14c47ea2874817cdc7b93803d4a4ea1550a89279c57a7547c7fb6e9d076cddcb&o=" alt="The Embassy Angkor Resort &amp; Spa — Alojamiento"><figcaption class="badge">Alojamiento</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://cf.bstatic.com/xdata/images/hotel/max1024x768/505643921.jpg?k=d6f0049cea095ff862c5bafe8b23d77282caa18aec5b04b39c5e9f3613ba4c17&o=" alt="The Embassy Angkor Resort &amp; Spa — Alojamiento"><figcaption class="badge">Alojamiento</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://cf.bstatic.com/xdata/images/hotel/max1024x768/681584503.jpg?k=bc729d0361d6753198a8e84b8d56ebc8ff6a360c12510c29563f066b64f491e1&o=" alt="The Embassy Angkor Resort &amp; Spa — Alojamiento"><figcaption class="badge">Alojamiento</figcaption></figure>
+        </div>
+        <button class="arw p" data-dir="-1" aria-label="Anterior" hidden>&#8249;</button>
+        <button class="arw n" data-dir="1" aria-label="Siguiente" hidden>&#8250;</button>
+        <div class="count">1 / 12</div>
+      </div>
+      <div class="body">
+        <h4>The Embassy Angkor Resort &amp; Spa</h4>
+        <div class="room">Suite with Private Pool · 110 m²</div>
+        <div class="priceline"><span class="price">330 €</span><span class="per">3 noches</span>
+          <span class="tag due">Pagar después</span></div>
+        <dl><dt>Cancelación</dt><dd>Gratuita — fecha límite sin anotar, revisa tu confirmación</dd><dt>Dónde</dt><dd>Chunlung Village, Salakamreuk — unos 5 min en tuk-tuk de Pub Street, en la parte tranquila</dd><dt>Habitación</dt><dd>1 cama doble extragrande, colchón premium. Baño en suite amplio con bañera de mármol. Algunas suites de esta categoría tienen piscina privada pequeña en el jardín trasero.</dd><dt>Extras</dt><dd>Tuk-tuk gratis al centro, aprox. 7:00–22:00. Desayuno en caja si sales antes del servicio para el amanecer en Angkor Wat. Té de la tarde a diario.</dd><dt>Recordatorio</dt><dd>El aeropuerto SAI está lejos del centro: conviene dejar el traslado cerrado. Angkor: 37 USD por persona 1 día, 62 USD 3 días.</dd></dl>
+        <div class="amen"><span>110 m²</span><span>Piscina privada</span><span>Balcón</span><span>Vistas al jardín</span><span>Terraza</span><span>Minibar</span><span>WiFi gratis</span></div>
+        <a class="go" href="https://www.agoda.com/en-za/the-embassy-angkor-resort-and-spa/hotel/siem-reap-kh.html" target="_blank" rel="noopener">Ver en Agoda &rarr;</a>
+      </div></article></div></div>
+<div class="stop" id="hanoi">
+    <div class="stop-head"><h3>Hanoi <span class="eyebrow">Hoàn Kiếm</span></h3>
+      <span class="when">11 – 14 dic · 3 noches</span></div>
+    <div class="opts"><article class="card">
+      <div class="carwrap">
+        <div class="car">
+          <figure class="slide"><img  referrerpolicy="no-referrer" src="https://a0.muscache.com/im/pictures/miso/Hosting-1404201638801553185/original/145cac6f-8966-4b98-b61e-1c808951c322.jpeg?im_w=1200" alt="Vista 9 Skyline Suite — Habitación"><figcaption class="badge">Habitación</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://a0.muscache.com/im/pictures/miso/Hosting-1404201638801553185/original/bfe61ddb-a25a-4862-95d0-64af385c665f.jpeg?im_w=1200" alt="Vista 9 Skyline Suite — Habitación"><figcaption class="badge">Habitación</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://a0.muscache.com/im/pictures/miso/Hosting-1404201638801553185/original/9751fbc8-3c21-45b3-8a43-2bf2a4102c84.jpeg?im_w=1200" alt="Vista 9 Skyline Suite — Habitación"><figcaption class="badge">Habitación</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://a0.muscache.com/im/pictures/miso/Hosting-1404201638801553185/original/d9dc76bf-800e-4b7f-8ef8-ed9fdc65e046.jpeg?im_w=1200" alt="Vista 9 Skyline Suite — Habitación"><figcaption class="badge">Habitación</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://a0.muscache.com/im/pictures/miso/Hosting-1404201638801553185/original/12b183dc-e7c0-4f8c-80b1-91902996601d.jpeg?im_w=1200" alt="Vista 9 Skyline Suite — Habitación"><figcaption class="badge">Habitación</figcaption></figure>
+        </div>
+        <button class="arw p" data-dir="-1" aria-label="Anterior" hidden>&#8249;</button>
+        <button class="arw n" data-dir="1" aria-label="Siguiente" hidden>&#8250;</button>
+        <div class="count">1 / 5</div>
+      </div>
+      <div class="body">
+        <h4>Vista 9 Skyline Suite</h4>
+        <div class="room">Airbnb · alojamiento entero · anfitrión Duy</div>
+        <div class="priceline"><span class="price">162,56 €</span><span class="per">3 noches</span>
+          <span class="tag paid">Pagado</span></div>
+        <dl><dt>Dirección</dt><dd>16a5 Phố Lý Nam Đế, Hoàn Kiếm, Hà Nội</dd><dt>Horarios</dt><dd>Entrada desde 15:00 · salida 11:00 · acceso con teclado</dd><dt>Cancelación</dt><dd>Gratuita hasta el 6 de dic, 15:00; después, reembolso parcial hasta el check-in</dd><dt>Recordatorio</dt><dd>Llevad chaqueta fina: en diciembre Hanoi y Ninh Bình pueden estar frescos y con niebla.</dd></dl>
+        
+        <a class="go" href="https://www.airbnb.de/rooms/1404201638801553185" target="_blank" rel="noopener">Ver en Airbnb &rarr;</a>
+      </div></article></div></div>
+<div class="stop" id="ninhbinh">
+    <div class="stop-head"><h3>Ninh Bình <span class="eyebrow">Ninh Xuân</span></h3>
+      <span class="when">14 – 17 dic · 3 noches</span></div>
+    <div class="opts"><article class="card">
+      <div class="carwrap">
+        <div class="car">
+          <figure class="slide"><img  referrerpolicy="no-referrer" src="https://a0.muscache.com/im/pictures/hosting/Hosting-1313519460288118987/original/11cb2c78-abbe-41e2-9c7e-ae13c1524e0d.jpeg?im_w=1200" alt="Trang An Garden Resort — Habitación"><figcaption class="badge">Habitación</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://a0.muscache.com/im/pictures/hosting/Hosting-1313519460288118987/original/504a2550-bfa6-4334-9047-e050ba0b06e5.jpeg?im_w=1200" alt="Trang An Garden Resort — Habitación"><figcaption class="badge">Habitación</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://a0.muscache.com/im/pictures/hosting/Hosting-1313519460288118987/original/27718008-99cd-42ce-8288-3c2c4dd4347e.jpeg?im_w=1200" alt="Trang An Garden Resort — Habitación"><figcaption class="badge">Habitación</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://a0.muscache.com/im/pictures/hosting/Hosting-1313519460288118987/original/9f4cbc8d-92ac-4605-86b1-c86a98f7fee4.jpeg?im_w=1200" alt="Trang An Garden Resort — Habitación"><figcaption class="badge">Habitación</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://a0.muscache.com/im/pictures/hosting/Hosting-1313519460288118987/original/6fe252cb-418e-4c5e-9b53-ae615af95cf3.jpeg?im_w=1200" alt="Trang An Garden Resort — Habitación"><figcaption class="badge">Habitación</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://a0.muscache.com/im/pictures/hosting/Hosting-1313519460288118987/original/0d0a881f-e6cf-4e77-8e73-fcc26898571c.png?im_w=1200" alt="Trang An Garden Resort — Alojamiento"><figcaption class="badge">Alojamiento</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://a0.muscache.com/im/pictures/hosting/Hosting-1313519460288118987/original/d3d8f149-caf8-45dd-8061-045bb24c40e3.jpeg?im_w=1200" alt="Trang An Garden Resort — Alojamiento"><figcaption class="badge">Alojamiento</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://a0.muscache.com/im/pictures/hosting/Hosting-1313519460288118987/original/25e42c44-4e62-4004-a2c9-a92a2e355c7c.jpeg?im_w=1200" alt="Trang An Garden Resort — Alojamiento"><figcaption class="badge">Alojamiento</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://a0.muscache.com/im/pictures/hosting/Hosting-1313519460288118987/original/a544c46d-6868-491a-848c-600b9050321b.jpeg?im_w=1200" alt="Trang An Garden Resort — Alojamiento"><figcaption class="badge">Alojamiento</figcaption></figure>
+        </div>
+        <button class="arw p" data-dir="-1" aria-label="Anterior" hidden>&#8249;</button>
+        <button class="arw n" data-dir="1" aria-label="Siguiente" hidden>&#8250;</button>
+        <div class="count">1 / 9</div>
+      </div>
+      <div class="body">
+        <h4>Trang An Garden Resort</h4>
+        <div class="room">Biệt thự Superior con piscina privada · Airbnb · anfitriona Nhu</div>
+        <div class="priceline"><span class="price">129,42 €</span><span class="per">3 noches</span>
+          <span class="tag paid">Pagado</span></div>
+        <dl><dt>Dirección</dt><dd>Thôn Khê Hạ, Ninh Xuân, Ninh Bình 650000</dd><dt>Horarios</dt><dd>Entrada desde 15:00 · salida 11:00 · te recibe el personal del edificio</dd><dt>Cancelación</dt><dd>Gratuita hasta el 30 de nov, 15:00 — tu fecha límite más temprana</dd></dl>
+        
+        <a class="go" href="https://www.airbnb.de/rooms/1313519460288118987" target="_blank" rel="noopener">Ver en Airbnb &rarr;</a>
+      </div></article></div></div>
+<div class="stop" id="phongnha">
+    <div class="stop-head"><h3>Phong Nha</h3>
+      <span class="when">17 – 19 dic · 2 noches</span></div>
+    <div class="opts"><article class="card">
+      <div class="carwrap">
+        <div class="car">
+          <figure class="slide"><img  referrerpolicy="no-referrer" src="https://cf.bstatic.com/xdata/images/hotel/max1024x768/175009579.jpg?k=91ad35aae0651b291f3dd5b7bdce075328e60122ca925202278f0004c9557a2d&o=" alt="Phong Nha Mountain House — Habitación"><figcaption class="badge">Habitación</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://cf.bstatic.com/xdata/images/hotel/max1024x768/175009495.jpg?k=f1ff21bd762e2abff61aa5c6068903392ece22e617c3ff6a532637fde85a6826&o=" alt="Phong Nha Mountain House — Habitación"><figcaption class="badge">Habitación</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://cf.bstatic.com/xdata/images/hotel/max1024x768/175009566.jpg?k=42c59209ae701e0a6ddb5e77b6019a2c393c87946950777bb5fda6d9b5607354&o=" alt="Phong Nha Mountain House — Habitación"><figcaption class="badge">Habitación</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://cf.bstatic.com/xdata/images/hotel/max1024x768/809948980.jpg?k=91241fd7b5b29e5cf151551dbb465f982d231bf937831264431f2c1daafc3db6&o=" alt="Phong Nha Mountain House — Alojamiento"><figcaption class="badge">Alojamiento</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://cf.bstatic.com/xdata/images/hotel/max1024x768/726122682.jpg?k=d692ee8bb4db86f9e15f77ccb00c652f76454262cf6ac76702c95152b039a221&o=" alt="Phong Nha Mountain House — Alojamiento"><figcaption class="badge">Alojamiento</figcaption></figure>
+        </div>
+        <button class="arw p" data-dir="-1" aria-label="Anterior" hidden>&#8249;</button>
+        <button class="arw n" data-dir="1" aria-label="Siguiente" hidden>&#8250;</button>
+        <div class="count">1 / 5</div>
+      </div>
+      <div class="body">
+        <h4>Phong Nha Mountain House</h4>
+        <div class="room">Habitación Doble · Vực Trô</div>
+        <div class="priceline"><span class="price">42 €</span><span class="per">2 noches</span>
+          <span class="tag cash">Se paga en efectivo</span></div>
+        <dl><dt>Cancelación</dt><dd>Gratuita</dd><dt>Habitación</dt><dd>1 cama doble grande. Balcón y patio, vistas al jardín y a la montaña.</dd><dt>Efectivo</dt><dd>Reservad 1.200.000 VND (≈41 €) en metálico para este alojamiento.</dd><dt>Recordatorio</dt><dd>Confirmad la apertura de las cuevas según lluvia y crecida del río. En tren se llega a Dong Hoi y luego por carretera. Son cuevas turísticas con grupo, no espeleología técnica — comprobadlo con el seguro.</dd></dl>
+        <div class="amen"><span>Balcón</span><span>Vistas a la montaña</span><span>Patio</span><span>Terraza</span><span>Minibar</span><span>WiFi gratis</span></div>
+        <a class="go" href="https://www.booking.com/hotel/vn/phong-nha-mountain-house.es.html" target="_blank" rel="noopener">Ver en Booking.com &rarr;</a>
+      </div></article></div></div>
+<div class="stop" id="hue">
+    <div class="stop-head"><h3>Hue</h3>
+      <span class="when">19 – 21 dic · 2 noches</span></div>
+    <div class="opts"><article class="card">
+      <div class="carwrap">
+        <div class="car">
+          <figure class="slide"><img  referrerpolicy="no-referrer" src="https://a0.muscache.com/im/pictures/hosting/Hosting-1611373161981075209/original/54586311-b6d9-4dd5-b492-cff287d94ddf.jpeg?im_w=1200" alt="LOST — Ático con terraza — Habitación"><figcaption class="badge">Habitación</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://a0.muscache.com/im/pictures/hosting/Hosting-1611373161981075209/original/6ed0fc66-80a5-4432-bd17-7af96320b54b.jpeg?im_w=1200" alt="LOST — Ático con terraza — Habitación"><figcaption class="badge">Habitación</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://a0.muscache.com/im/pictures/hosting/Hosting-1611373161981075209/original/8028f923-db09-44ed-84a7-c5183b56781c.jpeg?im_w=1200" alt="LOST — Ático con terraza — Habitación"><figcaption class="badge">Habitación</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://a0.muscache.com/im/pictures/hosting/Hosting-1611373161981075209/original/286d10a4-a7af-49b9-b071-bc2e5f1ea6b2.jpeg?im_w=1200" alt="LOST — Ático con terraza — Habitación"><figcaption class="badge">Habitación</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://a0.muscache.com/im/pictures/hosting/Hosting-1611373161981075209/original/c8db643d-e573-4602-a9a6-816df6648c1c.jpeg?im_w=1200" alt="LOST — Ático con terraza — Habitación"><figcaption class="badge">Habitación</figcaption></figure>
+        </div>
+        <button class="arw p" data-dir="-1" aria-label="Anterior" hidden>&#8249;</button>
+        <button class="arw n" data-dir="1" aria-label="Siguiente" hidden>&#8250;</button>
+        <div class="count">1 / 5</div>
+      </div>
+      <div class="body">
+        <h4>LOST — Ático con terraza</h4>
+        <div class="room">Habitación privada en ático · Airbnb · anfitrión LimdimHere</div>
+        <div class="priceline"><span class="price">75,56 €</span><span class="per">2 noches</span>
+          <span class="tag due">Se paga el 6 dic</span></div>
+        <dl><dt>Dónde</dt><dd>Centro de Hue. La dirección exacta te la dan después de reservar.</dd><dt>Alojamiento</dt><dd>1 dormitorio, 1 cama, baño privado. Máximo 2 huéspedes.</dd><dt>Horarios</dt><dd>Entrada desde las 14:00 · check-in autónomo con cerradura electrónica</dd><dt>Cómo se llega</dt><dd>Ascensor privado hasta la última planta. Se pasa por la cafetería y el bar de vinos del edificio.</dd><dt>Cómo es</dt><dd>Ventanal circular tipo caleidoscopio con vistas a la ciudad, techos altos de madera, baldosa hidráulica y bañera junto al cristal. Balcón privado con plantas.</dd><dt>Valoración</dt><dd>4,79 sobre 5 · 28 opiniones · anfitrión Superhost desde hace 7 años</dd><dt>Cancelación</dt><dd>Las condiciones originales daban cancelación gratuita hasta el 14 de dic a las 14:00. Al haber cambiado las fechas, conviene que lo confirméis de nuevo en Airbnb.</dd></dl>
+        <div class="amen"><span>Baño privado</span><span>Balcón</span><span>Bañera</span><span>Vistas a la ciudad</span><span>Lavadora</span><span>Escritorio</span><span>TV</span><span>WiFi</span></div>
+        <a class="go" href="https://www.airbnb.de/rooms/1611373161981075209" target="_blank" rel="noopener">Ver en Airbnb &rarr;</a>
+      </div></article></div></div>
+<div class="stop" id="hoian">
+    <div class="stop-head"><h3>Hoi An <span class="eyebrow">Cumpleaños</span></h3>
+      <span class="when">21 – 23 dic · 2 noches</span></div>
+    <div class="opts"><article class="card">
+      <div class="carwrap">
+        <div class="car">
+          <figure class="slide"><img  referrerpolicy="no-referrer" src="https://cf.bstatic.com/xdata/images/hotel/max1024x768/479415557.jpg?k=34b9d2eb0dc603d992ed81aa8b19eb30240e9cde71f96271088e6c5a2ebdb19a&o=" alt="Grand Sunrise Palace — Habitación"><figcaption class="badge">Habitación</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://cf.bstatic.com/xdata/images/hotel/max1024x768/483858139.jpg?k=83855d5b7b0caeec41763542ab922feecdb36a5e8fcc61fdc1ff55b84f912170&o=" alt="Grand Sunrise Palace — Habitación"><figcaption class="badge">Habitación</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://cf.bstatic.com/xdata/images/hotel/max1024x768/491041519.jpg?k=7dcb3917ed8c0848b734360518a7f7b018d383d4c149ffbe01cf17d9fc736ba6&o=" alt="Grand Sunrise Palace — Habitación"><figcaption class="badge">Habitación</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://cf.bstatic.com/xdata/images/hotel/max1024x768/479415528.jpg?k=52ebea5f5e6c9b6c7624fda7d7d64fa1fca9e6b3bc9dbd5151d9c0a33a6c0a9e&o=" alt="Grand Sunrise Palace — Habitación"><figcaption class="badge">Habitación</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://cf.bstatic.com/xdata/images/hotel/max1024x768/841262575.jpg?k=a126ba4054d3becc1edd44f12d89ed557fc9deb4298e89a4a517f122afeec2b5&o=" alt="Grand Sunrise Palace — Alojamiento"><figcaption class="badge">Alojamiento</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://cf.bstatic.com/xdata/images/hotel/max1024x768/491062638.jpg?k=1ed4f98016a87ccfdd5d20ab91f6c1992f08beed868f0e257130236716f73545&o=" alt="Grand Sunrise Palace — Alojamiento"><figcaption class="badge">Alojamiento</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://cf.bstatic.com/xdata/images/hotel/max1024x768/479414815.jpg?k=ea3edc6a0afa57ef8fa80361450d6787d95a59eca028b816033592c0d46ba3d0&o=" alt="Grand Sunrise Palace — Alojamiento"><figcaption class="badge">Alojamiento</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://cf.bstatic.com/xdata/images/hotel/max1024x768/479414568.jpg?k=a5e3c37ec3911567ada38406b9db34b59c97c67f253414cad0df36fa20fe296e&o=" alt="Grand Sunrise Palace — Alojamiento"><figcaption class="badge">Alojamiento</figcaption></figure>
+        </div>
+        <button class="arw p" data-dir="-1" aria-label="Anterior" hidden>&#8249;</button>
+        <button class="arw n" data-dir="1" aria-label="Siguiente" hidden>&#8250;</button>
+        <div class="count">1 / 8</div>
+      </div>
+      <div class="body">
+        <h4>Grand Sunrise Palace</h4>
+        <div class="room">Suite indochina de lujo · 50 m²</div>
+        <div class="priceline"><span class="price">243 €</span><span class="per">2 noches</span>
+          <span class="tag paid">Reservado</span><span class="tag due">Se paga el 16 dic</span></div>
+        <dl><dt>Habitación</dt><dd>1 cama doble extragrande, entrada privada. Baño con albornoces, ducha a ras de suelo, bañera y bidet. Vistas a la ciudad y al patio interior.</dd><dt>Extras</dt><dd>Piscina infinita en la azotea y sauna.</dd><dt>El cumpleaños</dt><dd>Con dos noches, el 22 queda libre entero en Hoi An. Buen día para reservar cena.</dd><dt>Recordatorio</dt><dd>Posible lluvia en esta parte del viaje. Dejad organizada la salida del 23 hacia el aeropuerto de Da Nang (DAD).</dd></dl>
+        <div class="amen"><span>50 m²</span><span>Piscina en la azotea</span><span>Sauna</span><span>Balcón</span><span>Terraza</span><span>Cafetera</span><span>Minibar</span><span>WiFi gratis</span></div>
+        <a class="go" href="https://www.agoda.com/en-za/grand-sunrise-palace-hoi-an-h38715126/hotel/hoi-an-vn.html" target="_blank" rel="noopener">Ver en Agoda &rarr;</a>
+      </div></article></div></div>
+<div class="stop" id="bangkok2">
+    <div class="stop-head"><h3>Bangkok <span class="eyebrow">Riverside</span></h3>
+      <span class="when">23 – 26 dic · 3 noches</span></div>
+    <div class="opts"><article class="card">
+      <div class="carwrap">
+        <div class="car">
+          <figure class="slide"><img  referrerpolicy="no-referrer" src="https://pix8.agoda.net/property/109169/756485165/f3d3ed9ce63bbd876187e3282e578ba2.jpeg?ce=2&s=1024x" alt="Chatrium Hotel Riverside Bangkok — Habitación"><figcaption class="badge">Habitación</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://pix8.agoda.net/property/60417972/0/c6ba2ea3601ce3bde7098a50460b7b24.jpeg?ce=0&s=1024x" alt="Chatrium Hotel Riverside Bangkok — Habitación"><figcaption class="badge">Habitación</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://pix8.agoda.net/hotelImages/109169/-1/da7b54be74bbebaa618175b4e4d0b2f5.jpg?ca=9&ce=1&s=1024x" alt="Chatrium Hotel Riverside Bangkok — Habitación"><figcaption class="badge">Habitación</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://pix8.agoda.net/property/109169/910220519/ac65d3391378f5e57f6f50f67ff3b8a6.jpeg?ce=0&s=1024x" alt="Chatrium Hotel Riverside Bangkok — Habitación"><figcaption class="badge">Habitación</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://pix8.agoda.net/property/109169/756485165/bca7ce3e05f2e463fab3375ed170738d.jpeg?ce=0&s=1024x" alt="Chatrium Hotel Riverside Bangkok — Habitación"><figcaption class="badge">Habitación</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://pix8.agoda.net/property/109169/658457130/2d9ea0f88dd7e001ee161b896389afa4.jpeg?ce=0&s=1024x" alt="Chatrium Hotel Riverside Bangkok — Habitación"><figcaption class="badge">Habitación</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://q-xx.bstatic.com/xdata/images/hotel/840x460/453036340.jpg?k=89d5cdb9b29457697fccbc6c59260df915a84ae6ccbf09f1b1b4d704c9910bfe&o=" alt="Chatrium Hotel Riverside Bangkok — Habitación"><figcaption class="badge">Habitación</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://cf.bstatic.com/xdata/images/hotel/max1024x768/796344995.jpg?k=8a7e90c217d5173b4bf8a530879444e039494039c2915d26e7fd5732ce03bd7d&o=" alt="Chatrium Hotel Riverside Bangkok — Alojamiento"><figcaption class="badge">Alojamiento</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://cf.bstatic.com/xdata/images/hotel/max1024x768/216522980.jpg?k=c6d3d4d3c20116d33982b6a096e019e4b6bdbfccd3320de265dca28b6e5d25b0&o=" alt="Chatrium Hotel Riverside Bangkok — Alojamiento"><figcaption class="badge">Alojamiento</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://cf.bstatic.com/xdata/images/hotel/max1024x768/796537308.jpg?k=3d6beacdadd7aeaa95bd6563e61d0b69ad67eb8393bcc1f4c363978a5a42b608&o=" alt="Chatrium Hotel Riverside Bangkok — Alojamiento"><figcaption class="badge">Alojamiento</figcaption></figure><figure class="slide"><img loading="lazy" referrerpolicy="no-referrer" src="https://cf.bstatic.com/xdata/images/hotel/max1024x768/675456105.jpg?k=bf11e2e7b33b2dbec56e0d4c12768ef4b1756842c3025818b90020f78c194ece&o=" alt="Chatrium Hotel Riverside Bangkok — Alojamiento"><figcaption class="badge">Alojamiento</figcaption></figure>
+        </div>
+        <button class="arw p" data-dir="-1" aria-label="Anterior" hidden>&#8249;</button>
+        <button class="arw n" data-dir="1" aria-label="Siguiente" hidden>&#8250;</button>
+        <div class="count">1 / 11</div>
+      </div>
+      <div class="body">
+        <h4>Chatrium Hotel Riverside Bangkok</h4>
+        <div class="room">Suite de 1 dormitorio con cama extragrande y vistas al río · 70 m²</div>
+        <div class="priceline"><span class="price">588 €</span><span class="per">3 noches</span>
+          <span class="tag due">Pagar después</span></div>
+        <dl><dt>Cancelación</dt><dd>Gratuita — fecha límite sin anotar</dd><dt>Dónde</dt><dd>28 Charoenkrung Road, Wat Prayakrai, Bang Kho Laem — orilla este del Chao Phraya</dd><dt>Habitación</dt><dd>Suite de 70 m² con balcón privado y office. Salón independiente y baño amplio.</dd><dt>Extras</dt><dd>Barco lanzadera del hotel, piscina infinita sobre el río, bar Cloud 36 en la azotea, spa Nemita.</dd><dt>Aviso</dt><dd>Tu enlace guardado es un enlace corto de Booking.com y puede caducar. Guarda la confirmación completa en el móvil.</dd><dt>Recordatorio</dt><dd>Esta es la segunda entrada a Tailandia: hace falta una TDAC nueva.</dd></dl>
+        <div class="amen"><span>70 m²</span><span>Vistas al río</span><span>Balcón</span><span>Office</span><span>Piscina infinita</span><span>WiFi gratis</span></div>
+        <a class="go" href="https://www.booking.com/Share-9r1QjzZ" target="_blank" rel="noopener">Ver en Booking.com &rarr;</a>
+      </div></article></div></div>
+</section>
+
+<section id="dias">
+  <div class="sec-head"><h2>Día a día</h2></div>
+<div class="day"><div class="d">Sáb 5</div><div><div class="place">Bangkok</div><div class="plan">Llegada. Tarde y noche tranquilas.</div></div></div>
+<div class="day"><div class="d">Dom 6</div><div><div class="place">Bangkok</div><div class="plan">Día completo en la ciudad.</div></div></div>
+<div class="day"><div class="d">Lun 7</div><div><div class="place">Bangkok</div><div class="plan">Día completo en la ciudad.</div></div></div>
+<div class="day"><div class="d">Mar 8</div><div><div class="place">Siem Reap</div><div class="plan">Vuelo Bangkok → Siem Reap. Check-in, piscina o spa y buena cena.</div></div></div>
+<div class="day"><div class="d">Mié 9</div><div><div class="place">Siem Reap</div><div class="plan">Templos principales de Angkor: amanecer en Angkor Wat, Bayon y Ta Prohm.</div></div></div>
+<div class="day"><div class="d">Jue 10</div><div><div class="place">Siem Reap</div><div class="plan">Cascada de Phnom Kulen y campo — o día relajado en el hotel y Phare Circus por la noche.</div></div></div>
+<div class="day"><div class="d">Vie 11</div><div><div class="place">Hanoi</div><div class="plan">Vuelo Siem Reap → Hanoi. Cena tranquila.</div></div></div>
+<div class="day"><div class="d">Sáb 12</div><div><div class="place">Hanoi</div><div class="plan">Comida, café, Old Quarter y ambiente de la ciudad. Buen restaurante o bar.</div></div></div>
+<div class="day"><div class="d">Dom 13</div><div><div class="place">Hanoi</div><div class="plan">Cafés, French Quarter o West Lake. Food tour o cena larga.</div></div></div>
+<div class="day"><div class="d">Lun 14</div><div><div class="place">Ninh Bình</div><div class="plan">Traslado desde Hanoi. Check-in y paseo tranquilo en bicicleta.</div></div></div>
+<div class="day"><div class="d">Mar 15</div><div><div class="place">Ninh Bình</div><div class="plan">Paseo en barco por Trang An y mirador de Hang Múa.</div></div></div>
+<div class="day"><div class="d">Mié 16</div><div><div class="place">Ninh Bình</div><div class="plan">Reserva natural de Vân Long, o día relajado en el campo.</div></div></div>
+<div class="day"><div class="d">Jue 17</div><div><div class="place">Phong Nha</div><div class="plan">Regreso hacia Hanoi, o vuelo Hanoi → Dong Hoi si encajan los horarios, y traslado privado a Phong Nha.</div></div></div>
+<div class="day"><div class="d">Vie 18</div><div><div class="place">Phong Nha</div><div class="plan">Cuevas y naturaleza: Paradise Cave, Phong Nha Cave o tour de aventura.</div></div></div>
+<div class="day"><div class="d">Sáb 19</div><div><div class="place">Hue</div><div class="plan">Coche privado Phong Nha → Hue. Llegada por la tarde y cena en Hue.</div></div></div>
+<div class="day"><div class="d">Dom 20</div><div><div class="place">Hue</div><div class="plan">Día panorámico: río, gastronomía, una o dos tumbas bonitas y quizá visita breve a la Ciudad Imperial.</div></div></div>
+<div class="day"><div class="d">Lun 21</div><div><div class="place">Hoi An</div><div class="plan">Traslado privado Hue → Hoi An por el Hai Van Pass con paradas bonitas. Tarde y noche en Hoi An.</div></div></div>
+<div class="day special"><div class="d">Mar 22</div><div><div class="place">Hoi An · Cumpleaños</div><div class="plan">Día completo en Hoi An: casco antiguo, sastres, playa o piscina en la azotea. Cena de cumpleaños.</div></div></div>
+<div class="day"><div class="d">Mié 23</div><div><div class="place">Bangkok</div><div class="plan">Mañana en Hoi An, traslado al aeropuerto de Da Nang y vuelo Da Nang → Bangkok.</div></div></div>
+<div class="day"><div class="d">Jue 24</div><div><div class="place">Bangkok</div><div class="plan">Día relajado.</div></div></div>
+<div class="day"><div class="d">Vie 25</div><div><div class="place">Bangkok</div><div class="plan">Último día completo: spa, restaurantes, compras y rooftop.</div></div></div>
+<div class="day"><div class="d">Sáb 26</div><div><div class="place">Vuelta a casa</div><div class="plan">Vuelo de regreso desde Bangkok.</div></div></div>
+</section>
+
+<section id="tramites">
+  <div class="sec-head"><h2>Trámites de entrada</h2><span class="eyebrow">Visados y formularios</span></div>
+  <p class="note">Con pasaporte español o alemán, Tailandia y Vietnam no piden visado para una estancia como esta. Camboya sí: e-Visa turística. Además hacen falta la TDAC tailandesa (dos veces), el e-Arrival camboyano y, recomendable, la PAI vietnamita. Comprobad la nacionalidad de cada pasaporte y los cambios de normativa antes de salir.</p>
+  <div class="subhead">Calendario</div>
+  <table>
+    <tr><th>Cuándo</th><th>Gestión</th><th>Coste y nota</th></tr>
+    <tr><td class="num">En noviembre</td><td>Camboya: solicitar la e-Visa turística (los dos)</td><td>30 USD por persona · solo en evisa.gov.kh</td></tr>
+    <tr><td class="num">1 – 7 dic</td><td>Camboya: completar el e-Arrival</td><td>Gratis · guardar el QR</td></tr>
+    <tr><td class="num">3 – 4 dic</td><td>Tailandia: TDAC para la llegada del 5 dic</td><td>Gratis · primera entrada</td></tr>
+    <tr><td class="num">8 – 10 dic</td><td>Vietnam: completar la PAI antes del vuelo</td><td>Gratis · voluntaria, recomendable</td></tr>
+    <tr><td class="num">21 – 22 dic</td><td>Tailandia: SEGUNDA TDAC para el 23 dic</td><td>Gratis · no se reutiliza la primera</td></tr>
+  </table>
+  <p class="note"><b>Pasaporte:</b> para cubrir la última entrada a Tailandia, el 23 de diciembre, conviene que caduque después del <b>23 de junio de 2027</b>. Camboya pide más de seis meses de validez en el momento de entrar.</p>
+  <div class="subhead">Webs oficiales</div>
+  <ul class="llist">
+    <li><a href="https://tdac.immigration.go.th" target="_blank" rel="noopener">Tailandia · TDAC</a><span>Gratis · hasta 3 días antes de cada llegada</span></li>
+    <li><a href="https://www.evisa.gov.kh" target="_blank" rel="noopener">Camboya · e-Visa turística</a><span>30 USD por persona</span></li>
+    <li><a href="https://www.arrival.gov.kh" target="_blank" rel="noopener">Camboya · e-Arrival</a><span>Gratis · también la app oficial Cambodia e-Arrival</span></li>
+    <li><a href="https://prearrival.immigration.gov.vn" target="_blank" rel="noopener">Vietnam · PAI</a><span>Gratis · hasta 3 días antes de entrar</span></li>
+    <li><a href="https://registroviajeros.exteriores.gob.es" target="_blank" rel="noopener">España · Registro de Viajeros</a><span>Gratis · recomendable para los tres países</span></li>
+  </ul>
+  <p class="note">Usad solo estas direcciones. Existen intermediarios que cobran por formularios que son gratuitos, y las autoridades camboyanas han advertido expresamente contra webs falsas de e-Arrival.</p>
+</section>
+
+<section id="pagos">
+  <div class="sec-head"><h2>Pagos y cancelaciones</h2></div>
+  <div class="subhead">Pendiente de pagar</div>
+  <table>
+    <tr><th>Quién</th><th>Fecha</th><th>Importe</th><th>Concepto</th></tr>
+    <tr><td>Oli</td><td class="num">28 nov</td><td class="num">162,00 €</td><td>Sin identificar</td></tr>
+    <tr><td>Oli</td><td class="num">29 nov</td><td class="num">64,71 €</td><td>Sin identificar</td></tr>
+    <tr><td>Oli</td><td class="num">6 dic</td><td class="num">75,56 €</td><td>LOST, Hue</td></tr>
+    <tr><td>Oli</td><td class="num">16 dic</td><td class="num">243,00 €</td><td>Grand Sunrise Palace, Hoi An</td></tr>
+    <tr><td>Alberto</td><td class="num">29 nov</td><td class="num">291,60 €</td><td>Sin identificar</td></tr>
+    <tr class="tot"><td>Total</td><td class="num">5 pagos</td><td class="num">836,87 €</td><td></td></tr>
+  </table>
+  <p class="note">Aparte, <b>1.200.000 VND (≈41 €) en efectivo</b> para Phong Nha, sin fecha fija. Previsión conjunta: <b>≈877,87 €</b>. Dos de los importes no tienen concepto identificado — merece la pena anotarlo cuando lo comprobéis.</p>
+  <div class="subhead">Cancelación gratuita: últimas fechas</div>
+  <table>
+    <tr><th>Cuándo</th><th>Qué</th><th>Por qué</th></tr>
+    <tr><td class="num">30 nov, 15:00</td><td>Trang An Garden Resort, Ninh Bình</td><td>Último momento para reembolso completo</td></tr>
+    <tr><td class="num">6 dic, 15:00</td><td>Vista 9 Skyline Suite, Hanoi</td><td>Último momento para reembolso completo</td></tr>
+    <tr><td class="num">14 dic, 14:00</td><td>LOST, Hue</td><td>Condición original; reconfirmar tras el cambio de fechas</td></tr>
+  </table>
+  <p class="note">De Siem Reap y del Chatrium no tenéis anotada la fecha límite: está en vuestras confirmaciones. El Grande Centre Point de Bangkok no es reembolsable y ya está pagado.</p>
+</section>
+
+<section id="practico">
+  <div class="sec-head"><h2>Dinero, conexión y salud</h2></div>
+  <div class="tips">
+    <div class="tip"><h4>Regla de oro en cajeros</h4><p>Si os ofrecen «Convert to EUR» o «Guaranteed exchange rate», elegid <b>Decline conversion</b> y que os cobren en moneda local (THB, USD o VND). Rechazarlo no elimina la comisión fija del cajero, pero evita un tipo de cambio malo.</p></div>
+    <div class="tip"><h4>Trade Republic Visa</h4><p>Compras en divisa al tipo de Visa, sin recargo propio. Retiradas de 100 € o más sin comisión de Trade Republic; por debajo cobra 1 €. El cajero local puede cobrar lo suyo aparte: revisadlo antes de aceptar.</p></div>
+    <div class="tip"><h4>Vietnam · ACB</h4><p>ACB publica una exención de su recargo de cajero para tarjetas Visa emitidas en Europa. Merece la pena probar allí para sacar dong. No está garantizado: mirad el mensaje final del cajero y cancelad si aparece una comisión alta.</p></div>
+    <div class="tip"><h4>Camboya · dólares y rieles</h4><p>No hace falta comprar USD en España. Se puede retirar en Siem Reap (ABA, ACLEDA). El USD se usa en sitios turísticos y el riel para lo pequeño. Con hotel y entradas pagados, 100–150 USD entre los dos para tres días es una referencia. Billetes limpios y pequeños: los dañados se rechazan.</p></div>
+    <div class="tip"><h4>Tailandia · baht</h4><p>Efectivo para mercados y comida callejera. Los cajeros suelen cobrar comisión fija, así que mejor pocas retiradas de importe suficiente. Guardad los baht que os sobren del principio para la vuelta.</p></div>
+    <div class="tip"><h4>eSIM</h4><p>Airalo Asialink: 10 GB / 30 días por 25 USD por persona, o 20 GB por 39 USD. Holafly ofrece datos ilimitados a precio variable. Comprobad cobertura en los tres países y que el móvil admita eSIM antes de pagar.</p></div>
+    <div class="tip"><h4>La SIM española</h4><p>Desactivad los datos en roaming pero conservad la línea: la necesitaréis para los SMS del banco.</p></div>
+    <div class="tip"><h4>Salud</h4><p>Repelente antimosquitos (dengue). Guardad el teléfono de asistencia 24/7 y el número de póliza. Si os ingresan, pedid garantía de pago al hospital. No conduzcáis motos en Vietnam sin permiso reconocido y cobertura específica.</p></div>
+  </div>
+</section>
+
+<section id="checklist">
+  <div class="sec-head"><h2>Checklist</h2></div>
+<div class="cgroup"><h4>Ahora / próximas semanas</h4><ul class="checks"><li><label><input type="checkbox"><span>Revisar ambos pasaportes: validez más allá del 23 de junio de 2027</span></label></li><li><label><input type="checkbox"><span>Comprobar que los nombres de todos los billetes coinciden con el pasaporte</span></label></li><li><label><input type="checkbox"><span>Contratar el seguro para todo el viaje, desde Canarias hasta volver</span></label></li><li><label><input type="checkbox"><span>Confirmar por escrito residencia en Canarias y repatriación al domicilio</span></label></li><li><label><input type="checkbox"><span>Pedir cita en vacunación internacional (hepatitis A/B, tifoidea según criterio médico)</span></label></li><li><label><input type="checkbox"><span>Preparar la Trade Republic Visa física y una segunda tarjeta de respaldo</span></label></li><li><label><input type="checkbox"><span>Revisar vuelos: BKK / DMK en Bangkok, SAI en Siem Reap, DAD en Da Nang</span></label></li></ul></div>
+<div class="cgroup"><h4>Durante noviembre</h4><ul class="checks"><li><label><input type="checkbox"><span>Pedir las dos e-Visas de Camboya y guardar el PDF</span></label></li><li><label><input type="checkbox"><span>Comprar la eSIM regional compatible con los tres países</span></label></li><li><label><input type="checkbox"><span>Confirmar el traslado del aeropuerto SAI al hotel en Siem Reap</span></label></li><li><label><input type="checkbox"><span>Revisar transportes Ninh Bình → Dong Hoi → Phong Nha y Hoi An → Da Nang</span></label></li><li><label><input type="checkbox"><span>Guardar copias offline: pasaportes, vuelos, hoteles, seguro y teléfonos de asistencia</span></label></li><li><label><input type="checkbox"><span>Descargar Google Maps offline, Translate (tailandés, jemer, vietnamita) y Grab</span></label></li><li><label><input type="checkbox"><span>Reconfirmar la cancelación de LOST tras el cambio de fechas</span></label></li></ul></div>
+<div class="cgroup"><h4>En diciembre</h4><ul class="checks"><li><label><input type="checkbox"><span>TDAC de Tailandia antes del 5 de diciembre</span></label></li><li><label><input type="checkbox"><span>e-Arrival de Camboya, dentro de los 7 días previos al 8 de diciembre</span></label></li><li><label><input type="checkbox"><span>PAI de Vietnam, dentro de los 3 días previos al 11 de diciembre</span></label></li><li><label><input type="checkbox"><span>Reservar 1.200.000 VND en efectivo para Phong Nha</span></label></li><li><label><input type="checkbox"><span>SEGUNDA TDAC de Tailandia antes del 23 de diciembre</span></label></li><li><label><input type="checkbox"><span>Cena de cumpleaños reservada en Hoi An para el 22</span></label></li></ul></div>
+</section>
+
+<footer>Hecho a partir de vuestra hoja de reservas y de la guía de preparativos. Importes, normativa y condiciones pueden cambiar: confirmad las fechas límite y los requisitos de entrada en vuestras propias confirmaciones y en las webs oficiales antes de viajar.</footer>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+document.documentElement.classList.add("js");
+
+const PARADAS=[{"n":1,"id":"bangkok1","city":"Bangkok","lat":13.728,"lng":100.529,"d":"5 – 8 dic","h":"Grande Centre Point Surawong","dir":"left"},{"n":2,"id":"siemreap","city":"Siem Reap","lat":13.345,"lng":103.87,"d":"8 – 11 dic","h":"The Embassy Angkor Resort & Spa","leg":"air","dir":"bottom"},{"n":3,"id":"hanoi","city":"Hanoi","lat":21.035,"lng":105.845,"d":"11 – 14 dic","h":"Vista 9 Skyline Suite","leg":"air","dir":"left"},{"n":4,"id":"ninhbinh","city":"Ninh Bình","lat":20.25,"lng":105.916,"d":"14 – 17 dic","h":"Trang An Garden Resort","leg":"land","dir":"left"},{"n":5,"id":"phongnha","city":"Phong Nha","lat":17.58,"lng":106.26,"d":"17 – 19 dic","h":"Phong Nha Mountain House","leg":"land","dir":"left"},{"n":6,"id":"hue","city":"Hue","lat":16.4637,"lng":107.5909,"d":"19 – 21 dic","h":"LOST — Ático con terraza","leg":"land","dir":"right"},{"n":7,"id":"hoian","city":"Hoi An","lat":15.8801,"lng":108.338,"d":"21 – 23 dic","h":"Grand Sunrise Palace","leg":"land","dir":"right"},{"n":8,"id":"bangkok2","city":"Bangkok","lat":13.701,"lng":100.51,"d":"23 – 26 dic","h":"Chatrium Hotel Riverside","leg":"air","dir":"bottom"}];
+(function(){
+  const box=document.getElementById("map");
+  if(!box) return;
+  if(!window.L){ box.innerHTML='<div class="mapfail">No se pudo cargar el mapa.<br>Hace falta conexión a internet.</div>'; return; }
+  try{
+    const map=L.map(box,{scrollWheelZoom:false}).setView([17.5,105],5);
+
+    // Capa gris sin etiquetas (Esri, sin clave). Los nombres los ponemos nosotros, en español.
+    // Ojo: esta capa usa el orden {z}/{y}/{x}, no el habitual {z}/{x}/{y}.
+    var base=L.tileLayer(
+      "https://{s}.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",
+      {maxZoom:16, subdomains:["server","services"],
+       attribution:'Esri, HERE, &copy; OpenStreetMap'}).addTo(map);
+
+    // Si esa capa no responde, caemos a los azulejos estándar de OpenStreetMap
+    var swapped=false;
+    base.on("tileerror",function(){
+      if(swapped) return; swapped=true;
+      map.removeLayer(base);
+      L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+        {maxZoom:18, attribution:'&copy; OpenStreetMap'}).addTo(map);
+    });
+
+    PARADAS.forEach(function(p,i){
+      L.marker([p.lat,p.lng],{icon:L.divIcon({className:"",
+        html:'<div class="pin">'+p.n+'</div>',iconSize:[26,26],iconAnchor:[13,13]})})
+        .addTo(map)
+        .bindTooltip(p.city,{permanent:true,direction:p.dir||"right",
+          className:"maplbl",offset:L.point(p.dir==="left"?-14:p.dir==="bottom"?0:14,
+                                            p.dir==="bottom"?12:0)})
+        .bindPopup("<b>"+p.n+". "+p.city+"</b><em>"+p.d+"</em><em>"+p.h+"</em>");
+      if(i>0){ const a=PARADAS[i-1];
+        L.polyline([[a.lat,a.lng],[p.lat,p.lng]],{
+          color:p.leg==="air"?"#A63A28":"#1F4B43",weight:2.5,opacity:.85,
+          dashArray:p.leg==="air"?"7,7":null}).addTo(map); }
+    });
+
+    map.fitBounds(L.latLngBounds(PARADAS.map(function(p){return [p.lat,p.lng];})),{padding:[55,55]});
+
+    // El contenedor puede medir mal si el mapa se monta antes de asentarse el layout
+    const fix=function(){ map.invalidateSize(); };
+    setTimeout(fix,250); addEventListener("load",fix); addEventListener("resize",fix);
+    if(window.ResizeObserver) new ResizeObserver(fix).observe(box);
+  }catch(e){
+    box.innerHTML='<div class="mapfail">No se pudo dibujar el mapa.<br>Las paradas están listadas debajo.</div>';
+  }
+})();
+
+document.querySelectorAll(".carwrap").forEach(w=>{
+  const car=w.querySelector(".car"),cnt=w.querySelector(".count");
+  const n=car.querySelectorAll(".slide").length;
+  const p=w.querySelector(".arw.p"),nx=w.querySelector(".arw.n");
+  p.hidden=false;nx.hidden=false;
+  const sync=()=>{const i=Math.round(car.scrollLeft/car.clientWidth);
+    cnt.textContent=(i+1)+" / "+n;p.hidden=i<=0;nx.hidden=i>=n-1;};
+  p.onclick=()=>car.scrollBy({left:-car.clientWidth,behavior:"smooth"});
+  nx.onclick=()=>car.scrollBy({left:car.clientWidth,behavior:"smooth"});
+  car.addEventListener("scroll",()=>{clearTimeout(car._t);car._t=setTimeout(sync,60)},{passive:true});
+  sync();
+});
+
+const links=[...document.querySelectorAll(".nav a")];
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)
+  links.forEach(l=>l.classList.toggle("on",l.getAttribute("href")==="#"+e.target.id));}),
+  {rootMargin:"-15% 0px -75% 0px"});
+document.querySelectorAll("section[id],.stop[id]").forEach(el=>io.observe(el));
+</script>
+</body>
+</html>
