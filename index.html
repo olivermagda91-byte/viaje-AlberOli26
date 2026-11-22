@@ -123,6 +123,32 @@ dd{margin:0}
   font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
   background:var(--jade);color:#fff;text-decoration:none;padding:11px 15px}
 
+.favs{margin-top:14px;border:1px solid var(--stone);background:#fff}
+.favs summary{padding:13px 17px;cursor:pointer;display:flex;align-items:baseline;gap:10px;
+  flex-wrap:wrap;list-style:none}
+.favs summary::-webkit-details-marker{display:none}
+.favs summary::before{content:"+";font-family:var(--mono);font-size:15px;color:var(--jade);
+  width:13px;flex:none;line-height:1}
+.favs[open] summary::before{content:"–"}
+.favs summary b{font-family:var(--serif);font-size:16px;font-weight:600}
+.favs summary span{font-family:var(--mono);font-size:9.5px;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--stone-deep)}
+.favs[open] summary{border-bottom:1px solid var(--stone)}
+.favbody{padding:4px 17px 17px}
+.fgroup{margin-top:16px}
+.fgroup h5{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--jade-soft);margin:0 0 9px;font-weight:500}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--stone);
+  border:1px solid var(--stone)}
+.fitem{background:#fff;padding:11px 13px}
+.fh{display:flex;align-items:baseline;gap:7px;margin-bottom:3px}
+.fe{font-size:14px;line-height:1;flex:none}
+.fh b{font-size:13.5px;font-family:var(--serif);font-weight:600}
+.fitem p{margin:0 0 7px;font-size:12.5px;color:#33403C;line-height:1.5}
+.flinks{display:flex;flex-wrap:wrap;gap:4px}
+.flinks a{font-family:var(--mono);font-size:9px;letter-spacing:.07em;text-transform:uppercase;
+  text-decoration:none;color:var(--jade);border:1px solid var(--stone);padding:3px 7px}
+
 .day{display:grid;grid-template-columns:60px 1fr;gap:16px;padding:12px 0;border-bottom:1px solid var(--stone)}
 .day:last-child{border-bottom:0}
 .day .d{font-family:var(--mono);font-size:11px;color:var(--jade-soft);padding-top:2px}
@@ -161,12 +187,15 @@ tr.tot td{border-bottom:0;border-top:2px solid var(--ink);font-weight:700;paddin
 footer{padding-top:20px;border-top:1px solid var(--stone);font-size:12px;color:var(--stone-deep)}
 
 @media (max-width:720px){
+  .fgrid{grid-template-columns:1fr}
   .checks{columns:1}
   .day{grid-template-columns:1fr;gap:3px}
   .wrap{padding:0 16px 70px}
 }
 @media print{
   .nav,.arw{display:none}
+  .favs summary::before{display:none}
+  .favs[open] summary,.favs summary{border-bottom:1px solid var(--stone)}
   body{background:#fff}
   .car{overflow:visible;display:grid;grid-template-columns:repeat(3,1fr);gap:2px;aspect-ratio:auto}
   .slide{flex:none}
@@ -262,12 +291,20 @@ footer{padding-top:20px;border-top:1px solid var(--stone);font-size:12px;color:v
       <div class="body">
         <h4>The Embassy Angkor Resort &amp; Spa</h4>
         <div class="room">Suite with Private Pool · 110 m²</div>
-291,60 €</span><span class="per">3 noches</span>
-          <span class="tag due">Pagar después</span></div>
+        <div class="priceline"><span class="price">291,60 €</span><span class="per">3 noches</span>
+          <span class="tag due">Se paga el 29 nov</span></div>
         <dl><dt>Cancelación</dt><dd>Gratuita — fecha límite sin anotar, revisa tu confirmación</dd><dt>Dónde</dt><dd>Chunlung Village, Salakamreuk — unos 5 min en tuk-tuk de Pub Street, en la parte tranquila</dd><dt>Habitación</dt><dd>1 cama doble extragrande, colchón premium. Baño en suite amplio con bañera de mármol. Algunas suites de esta categoría tienen piscina privada pequeña en el jardín trasero.</dd><dt>Extras</dt><dd>Tuk-tuk gratis al centro, aprox. 7:00–22:00. Desayuno en caja si sales antes del servicio para el amanecer en Angkor Wat. Té de la tarde a diario.</dd><dt>Recordatorio</dt><dd>El aeropuerto SAI está lejos del centro: conviene dejar el traslado cerrado. Angkor: 37 USD por persona 1 día, 62 USD 3 días.</dd></dl>
         <div class="amen"><span>110 m²</span><span>Piscina privada</span><span>Balcón</span><span>Vistas al jardín</span><span>Terraza</span><span>Minibar</span><span>WiFi gratis</span></div>
         <a class="go" href="https://www.agoda.com/en-za/the-embassy-angkor-resort-and-spa/hotel/siem-reap-kh.html" target="_blank" rel="noopener">Ver en Agoda &rarr;</a>
-      </div></article></div></div>
+      </div></article></div>
+    <details class="favs">
+      <summary><b>Nuestra lista de favoritos</b><span>11 sitios · pulsa para abrir</span></summary>
+      <div class="favbody">
+        <div class="fgroup"><h5>Talleres y artesanía</h5><div class="fgrid"><div class="fitem"><div class="fh"><span class="fe">🎭</span><b>Little Angels Leather Carving</b></div><p>Fabricar una marioneta de sombras de cuero. Taller pendiente de confirmar.</p><div class="flinks"><a href="https://visitsiemreap.com.kh/prasat-bakong-district-tour/" target="_blank" rel="noopener">Información &rarr;</a></div></div><div class="fitem"><div class="fh"><span class="fe">💍</span><b>Taller de joyería y metal</b></div><p>Crear vuestros propios anillos, collares o pulseras. Cuatro sitios donde mirar.</p><div class="flinks"><a href="https://www.tripadvisor.es/Attraction_Review-g297390-d32859492-Reviews-Annie_s_Jewelry-Siem_Reap_Siem_Reap_Province.html" target="_blank" rel="noopener">Annie's Jewelry &rarr;</a><a href="https://www.ammojewellery.com/workshops/" target="_blank" rel="noopener">AMMO &rarr;</a><a href="https://inmyname.my.canva.site/" target="_blank" rel="noopener">In My Name &rarr;</a><a href="https://angkorartandsip.com/book-now/" target="_blank" rel="noopener">Angkor Art &amp; Sip &rarr;</a></div></div><div class="fitem"><div class="fh"><span class="fe">🪷</span><b>Lotus Silk Farm</b></div><p>Talleres de papel de loto, pulseras, incienso y textiles.</p><div class="flinks"><a href="https://www.lotussilkfarm.com/es/visitas-descubre-las-maravillas-del-loto.html" target="_blank" rel="noopener">Web y reservas &rarr;</a></div></div><div class="fitem"><div class="fh"><span class="fe">🎨</span><b>Satcha Handicraft Center</b></div><p>Artesanía camboyana: grabado en cuero, talla de madera y más.</p><div class="flinks"><a href="https://satcha-handicraft.com/" target="_blank" rel="noopener">Web oficial &rarr;</a></div></div></div></div>
+        <div class="fgroup"><h5>Arte y cultura</h5><div class="fgrid"><div class="fitem"><div class="fh"><span class="fe">🏛️</span><b>Angkor National Museum</b></div><p>Para entender el Imperio jemer antes de ver los templos. Encaja el día 8 por la tarde.</p><div class="flinks"><a href="https://angkornationalmuseum.com/" target="_blank" rel="noopener">Web oficial &rarr;</a></div></div><div class="fitem"><div class="fh"><span class="fe">🎭</span><b>Sompoli Dthan</b></div><p>Teatro de sombras jemer con marionetas de cuero. Se puede cenar allí.</p><div class="flinks"><a href="https://sompolidthan.com/" target="_blank" rel="noopener">Web oficial &rarr;</a></div></div><div class="fitem"><div class="fh"><span class="fe">🖼️</span><b>Theam's Gallery</b></div><p>Casa-galería de un artista camboyano, con jardines, esculturas y artesanos trabajando.</p><div class="flinks"><a href="https://theamsgallery.com/" target="_blank" rel="noopener">Web oficial &rarr;</a></div></div><div class="fitem"><div class="fh"><span class="fe">🎨</span><b>The Cocoon House</b></div><p>Galería de arte contemporáneo y cultura alternativa.</p><div class="flinks"><a href="https://cocoonlimited.com/art-gallery-siem-reap/" target="_blank" rel="noopener">Web oficial &rarr;</a></div></div></div></div>
+        <div class="fgroup"><h5>Cafés y naturaleza</h5><div class="fgrid"><div class="fitem"><div class="fh"><span class="fe">🐹</span><b>Casa de Capybara</b></div><p>Cafetería temática con las capibaras Molly y Alex.</p><div class="flinks"><a href="https://www.casadecapybara.com/" target="_blank" rel="noopener">Web y entradas &rarr;</a></div></div><div class="fitem"><div class="fh"><span class="fe">☕</span><b>Pi Riel Coffee</b></div><p>Cafetería camboyana tradicional, decoración vintage y objetos antiguos.</p><div class="flinks"><a href="https://www.localguidesconnect.com/t/my-mornings-at-pi-riel-coffee/486634" target="_blank" rel="noopener">Fotos e info &rarr;</a></div></div><div class="fitem"><div class="fh"><span class="fe">🦋</span><b>Banteay Srey Butterfly Centre</b></div><p>Jardín tropical de mariposas locales, a unos 25 km del centro.</p><div class="flinks"><a href="https://www.angkorbutterfly.com/" target="_blank" rel="noopener">Web oficial &rarr;</a></div></div></div></div>
+      </div>
+    </details></div>
 <div class="stop" id="hanoi">
     <div class="stop-head"><h3>Hanoi <span class="eyebrow">Hoàn Kiếm</span></h3>
       <span class="when">11 – 14 dic · 3 noches</span></div>
@@ -455,10 +492,10 @@ footer{padding-top:20px;border-top:1px solid var(--stone);font-size:12px;color:v
     <tr><td>Oli</td><td class="num">29 nov</td><td class="num">64,71 €</td><td>Sin identificar</td></tr>
     <tr><td>Oli</td><td class="num">6 dic</td><td class="num">75,56 €</td><td>LOST, Hue</td></tr>
     <tr><td>Oli</td><td class="num">16 dic</td><td class="num">243,00 €</td><td>Grand Sunrise Palace, Hoi An</td></tr>
-    <tr><td>Alberto</td><td class="num">29 nov</td><td class="num">291,60 €</td><td>Sin identificar</td></tr>
+    <tr><td>Alberto</td><td class="num">29 nov</td><td class="num">291,60 €</td><td>The Embassy Angkor, Siem Reap</td></tr>
     <tr class="tot"><td>Total</td><td class="num">5 pagos</td><td class="num">836,87 €</td><td></td></tr>
   </table>
-  <p class="note">Aparte, <b>1.200.000 VND (≈41 €) en efectivo</b> para Phong Nha, sin fecha fija. Previsión conjunta: <b>≈877,87 €</b>. Dos de los importes no tienen concepto identificado — merece la pena anotarlo cuando lo comprobéis.</p>
+  <p class="note">Aparte, <b>1.200.000 VND (≈41 €) en efectivo</b> para Phong Nha, sin fecha fija. Previsión conjunta: <b>≈877,87 €</b>. Siguen sin identificar dos importes de Oli: <b>162,00 €</b> del 28 de nov y <b>64,71 €</b> del 29 de nov — merece la pena anotarlos cuando los comprobéis.</p>
   <div class="subhead">Cancelación gratuita: últimas fechas</div>
   <table>
     <tr><th>Cuándo</th><th>Qué</th><th>Por qué</th></tr>
